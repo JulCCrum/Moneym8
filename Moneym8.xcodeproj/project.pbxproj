@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		CA41D9B42CB98316000DCD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CA41D9992CB98313000DCD06 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CA41D9A02CB98313000DCD06;
+			remoteInfo = Moneym8;
+		};
+		CA41D9BE2CB98317000DCD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CA41D9992CB98313000DCD06 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CA41D9A02CB98313000DCD06;
+			remoteInfo = Moneym8;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CA41D9A12CB98313000DCD06 /* Moneym8.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneym8.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA41D9B32CB98316000DCD06 /* Moneym8Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Moneym8Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Moneym8UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		CA41D9A32CB98313000DCD06 /* Moneym8 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Moneym8;
+			sourceTree = "<group>";
+		};
+		CA41D9B62CB98316000DCD06 /* Moneym8Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Moneym8Tests;
+			sourceTree = "<group>";
+		};
+		CA41D9C02CB98317000DCD06 /* Moneym8UITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Moneym8UITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CA41D99E2CB98313000DCD06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA41D9B02CB98316000DCD06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA41D9BA2CB98316000DCD06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CA41D9982CB98313000DCD06 = {
+			isa = PBXGroup;
+			children = (
+				CA41D9A32CB98313000DCD06 /* Moneym8 */,
+				CA41D9B62CB98316000DCD06 /* Moneym8Tests */,
+				CA41D9C02CB98317000DCD06 /* Moneym8UITests */,
+				CA41D9A22CB98313000DCD06 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CA41D9A22CB98313000DCD06 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CA41D9A12CB98313000DCD06 /* Moneym8.app */,
+				CA41D9B32CB98316000DCD06 /* Moneym8Tests.xctest */,
+				CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CA41D9A02CB98313000DCD06 /* Moneym8 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA41D9C72CB98317000DCD06 /* Build configuration list for PBXNativeTarget "Moneym8" */;
+			buildPhases = (
+				CA41D99D2CB98313000DCD06 /* Sources */,
+				CA41D99E2CB98313000DCD06 /* Frameworks */,
+				CA41D99F2CB98313000DCD06 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CA41D9A32CB98313000DCD06 /* Moneym8 */,
+			);
+			name = Moneym8;
+			packageProductDependencies = (
+			);
+			productName = Moneym8;
+			productReference = CA41D9A12CB98313000DCD06 /* Moneym8.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CA41D9B22CB98316000DCD06 /* Moneym8Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA41D9CA2CB98317000DCD06 /* Build configuration list for PBXNativeTarget "Moneym8Tests" */;
+			buildPhases = (
+				CA41D9AF2CB98316000DCD06 /* Sources */,
+				CA41D9B02CB98316000DCD06 /* Frameworks */,
+				CA41D9B12CB98316000DCD06 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CA41D9B52CB98316000DCD06 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CA41D9B62CB98316000DCD06 /* Moneym8Tests */,
+			);
+			name = Moneym8Tests;
+			packageProductDependencies = (
+			);
+			productName = Moneym8Tests;
+			productReference = CA41D9B32CB98316000DCD06 /* Moneym8Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CA41D9BC2CB98316000DCD06 /* Moneym8UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA41D9CD2CB98317000DCD06 /* Build configuration list for PBXNativeTarget "Moneym8UITests" */;
+			buildPhases = (
+				CA41D9B92CB98316000DCD06 /* Sources */,
+				CA41D9BA2CB98316000DCD06 /* Frameworks */,
+				CA41D9BB2CB98316000DCD06 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CA41D9BF2CB98317000DCD06 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CA41D9C02CB98317000DCD06 /* Moneym8UITests */,
+			);
+			name = Moneym8UITests;
+			packageProductDependencies = (
+			);
+			productName = Moneym8UITests;
+			productReference = CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CA41D9992CB98313000DCD06 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					CA41D9A02CB98313000DCD06 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					CA41D9B22CB98316000DCD06 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = CA41D9A02CB98313000DCD06;
+					};
+					CA41D9BC2CB98316000DCD06 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = CA41D9A02CB98313000DCD06;
+					};
+				};
+			};
+			buildConfigurationList = CA41D99C2CB98313000DCD06 /* Build configuration list for PBXProject "Moneym8" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CA41D9982CB98313000DCD06;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CA41D9A22CB98313000DCD06 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CA41D9A02CB98313000DCD06 /* Moneym8 */,
+				CA41D9B22CB98316000DCD06 /* Moneym8Tests */,
+				CA41D9BC2CB98316000DCD06 /* Moneym8UITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CA41D99F2CB98313000DCD06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA41D9B12CB98316000DCD06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA41D9BB2CB98316000DCD06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CA41D99D2CB98313000DCD06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA41D9AF2CB98316000DCD06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA41D9B92CB98316000DCD06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CA41D9B52CB98316000DCD06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CA41D9A02CB98313000DCD06 /* Moneym8 */;
+			targetProxy = CA41D9B42CB98316000DCD06 /* PBXContainerItemProxy */;
+		};
+		CA41D9BF2CB98317000DCD06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CA41D9A02CB98313000DCD06 /* Moneym8 */;
+			targetProxy = CA41D9BE2CB98317000DCD06 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		CA41D9C52CB98317000DCD06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CA41D9C62CB98317000DCD06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CA41D9C82CB98317000DCD06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Moneym8/Preview Content\"";
+				DEVELOPMENT_TEAM = N9QB443496;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CA41D9C92CB98317000DCD06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Moneym8/Preview Content\"";
+				DEVELOPMENT_TEAM = N9QB443496;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CA41D9CB2CB98317000DCD06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N9QB443496;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moneym8.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Moneym8";
+			};
+			name = Debug;
+		};
+		CA41D9CC2CB98317000DCD06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N9QB443496;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moneym8.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Moneym8";
+			};
+			name = Release;
+		};
+		CA41D9CE2CB98317000DCD06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N9QB443496;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Moneym8;
+			};
+			name = Debug;
+		};
+		CA41D9CF2CB98317000DCD06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N9QB443496;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Moneym8;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CA41D99C2CB98313000DCD06 /* Build configuration list for PBXProject "Moneym8" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA41D9C52CB98317000DCD06 /* Debug */,
+				CA41D9C62CB98317000DCD06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CA41D9C72CB98317000DCD06 /* Build configuration list for PBXNativeTarget "Moneym8" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA41D9C82CB98317000DCD06 /* Debug */,
+				CA41D9C92CB98317000DCD06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CA41D9CA2CB98317000DCD06 /* Build configuration list for PBXNativeTarget "Moneym8Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA41D9CB2CB98317000DCD06 /* Debug */,
+				CA41D9CC2CB98317000DCD06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CA41D9CD2CB98317000DCD06 /* Build configuration list for PBXNativeTarget "Moneym8UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA41D9CE2CB98317000DCD06 /* Debug */,
+				CA41D9CF2CB98317000DCD06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CA41D9992CB98313000DCD06 /* Project object */;
+}
