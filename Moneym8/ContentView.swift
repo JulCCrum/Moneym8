@@ -38,7 +38,9 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var expenses: [Expense]
     @State private var showingAddExpense = false
-    @State private var selectedTab = 1  // Start on the middle tab
+    @State private var selectedTab = 1
+    @State private var showingOverlay = false
+    @State private var overlayButtonsAngle: Double = 0 // Start from 0 degrees
     
     var body: some View {
         ZStack {
@@ -75,13 +77,51 @@ struct ContentView: View {
                     .tag(2)
                     .modifier(LargerTabItem(isSelected: selectedTab == 2))
             }
-            .tint(.black)  // This will ensure selected items are black
+            .tint(.black)
+            .blur(radius: showingOverlay ? 10 : 0)
+            
+            if showingOverlay {
+                Color.black.opacity(0.3)
+                    .edgesIgnoringSafeArea(.all)
+                
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ZStack {
+                            // Minus button (180 degrees)
+                            OverlayButton(icon: "minus", color: .black, action: {
+                                showingAddExpense = true
+                                toggleOverlay()
+                            })
+                            .offset(x: showingOverlay ? -60 : 0, y: 50)
+                            
+                            // Plus button (135 degrees)
+                            OverlayButton(icon: "plus", color: .black, action: {
+                                // Add income action
+                                toggleOverlay()
+                            })
+                            .offset(x: showingOverlay ? -60 : 0, y: showingOverlay ? -10 : -10)
+                            
+                            // Help button (90 degrees)
+                            OverlayButton(icon: "questionmark", color: .black, action: {
+                                // Help action
+                                toggleOverlay()
+                            })
+                            .offset(x: 0, y: showingOverlay ? -30 : 0)
+                        }
+                        .frame(width: 150, height: 150)
+                    }
+                    .padding(.trailing, 0)
+                    .padding(.bottom, 80)
+                }
+            }
             
             VStack {
                 Spacer()
                 HStack {
                     Spacer()
-                    Button(action: { showingAddExpense = true }) {
+                    Button(action: toggleOverlay) {
                         Image(systemName: "plus")
                             .font(.title.weight(.semibold))
                             .padding()
@@ -90,11 +130,12 @@ struct ContentView: View {
                             .clipShape(Circle())
                             .shadow(radius: 4, x: 0, y: 4)
                     }
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 80) // Increased bottom padding to move the button up
+                    .padding(.trailing, 35)
+                    .padding(.bottom, 80)
                 }
             }
         }
+        .animation(.spring(response: 0.6, dampingFraction: 0.7), value: showingOverlay)
         .sheet(isPresented: $showingAddExpense) {
             AddExpenseView(modelContext: _modelContext)
         }
@@ -105,6 +146,12 @@ struct ContentView: View {
             for index in offsets {
                 modelContext.delete(expenses[index])
             }
+        }
+    }
+    
+    private func toggleOverlay() {
+        withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+            showingOverlay.toggle()
         }
     }
 }
@@ -180,5 +227,23 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+}
+
+struct OverlayButton: View {
+    let icon: String
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 22))  // Keep icon size the same
+                .foregroundColor(.white)
+                .frame(width: 45, height: 45)  // Reduce button size by 25%
+                .background(color)
+                .clipShape(Circle())
+                .shadow(radius: 3, x: 0, y: 3)  // Slightly reduced shadow to match smaller size
+        }
     }
 }
