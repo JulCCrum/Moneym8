@@ -40,7 +40,8 @@ struct ContentView: View {
     @State private var showingAddExpense = false
     @State private var selectedTab = 1
     @State private var showingOverlay = false
-    @State private var overlayButtonsAngle: Double = 0 // Start from 0 degrees
+    @State private var overlayButtonsScale: CGFloat = 0
+    @State private var fabRotation: Double = 0
     
     var body: some View {
         ZStack {
@@ -89,31 +90,19 @@ struct ContentView: View {
                     HStack {
                         Spacer()
                         ZStack {
-                            // Minus button (180 degrees)
-                            OverlayButton(icon: "minus", color: .black, action: {
-                                showingAddExpense = true
-                                toggleOverlay()
-                            })
-                            .offset(x: showingOverlay ? -60 : 0, y: 50)
-                            
-                            // Plus button (135 degrees)
-                            OverlayButton(icon: "plus", color: .black, action: {
-                                // Add income action
-                                toggleOverlay()
-                            })
-                            .offset(x: showingOverlay ? -60 : 0, y: showingOverlay ? -10 : -10)
-                            
-                            // Help button (90 degrees)
-                            OverlayButton(icon: "questionmark", color: .black, action: {
-                                // Help action
-                                toggleOverlay()
-                            })
-                            .offset(x: 0, y: showingOverlay ? -30 : 0)
+                            // Overlay buttons
+                            ForEach(0..<3) { index in
+                                OverlayButton(icon: iconForIndex(index), color: .black, action: {
+                                    actionForIndex(index)
+                                })
+                                .offset(offsetForIndex(index))
+                                .scaleEffect(overlayButtonsScale)
+                            }
                         }
-                        .frame(width: 150, height: 150)
+                        .frame(width: 200, height: 200)
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 80)
                     }
-                    .padding(.trailing, 0)
-                    .padding(.bottom, 80)
                 }
             }
             
@@ -129,8 +118,9 @@ struct ContentView: View {
                             .foregroundColor(.white)
                             .clipShape(Circle())
                             .shadow(radius: 4, x: 0, y: 4)
+                            .rotationEffect(.degrees(fabRotation))
                     }
-                    .padding(.trailing, 35)
+                    .padding(.trailing, 20)
                     .padding(.bottom, 80)
                 }
             }
@@ -152,6 +142,42 @@ struct ContentView: View {
     private func toggleOverlay() {
         withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
             showingOverlay.toggle()
+            fabRotation = showingOverlay ? 45 : 0  // Corrected to 45 degrees
+            overlayButtonsScale = showingOverlay ? 1 : 0
+        }
+    }
+    
+    private func offsetForIndex(_ index: Int) -> CGSize {
+        let angles: [CGFloat] = [.pi, 3 * .pi / 4, .pi / 2]  // Correct angles for the second quadrant
+        let radius: CGFloat = 70
+        return CGSize(
+            width: cos(angles[index]) * radius,
+            height: sin(angles[index]) * radius
+        )
+    }
+    
+    private func iconForIndex(_ index: Int) -> String {
+        switch index {
+        case 0: return "minus"
+        case 1: return "plus"
+        case 2: return "questionmark"
+        default: return ""
+        }
+    }
+    
+    private func actionForIndex(_ index: Int) {
+        switch index {
+        case 0:
+            showingAddExpense = true
+            toggleOverlay()
+        case 1:
+            // Add income action
+            toggleOverlay()
+        case 2:
+            // Help action
+            toggleOverlay()
+        default:
+            break
         }
     }
 }
