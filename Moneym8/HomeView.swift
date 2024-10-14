@@ -12,7 +12,7 @@ struct HomeView: View {
             }
             Spacer()
             
-            // Add your home view content here
+            // Add your home page content here
         }
     }
 }
@@ -22,3 +22,4 @@ struct HomeView_Previews: PreviewProvider {
         HomeView()
     }
 }
+

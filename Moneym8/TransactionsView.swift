@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ExpensesView: View {
+struct TransactionsView: View {
     @Binding var isExpanded: Bool
     @Binding var isBlurred: Bool
     
@@ -9,7 +9,7 @@ struct ExpensesView: View {
             ZStack {
                 VStack {
                     HStack {
-                        Text("Expenses")
+                        Text("Transactions")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .padding()

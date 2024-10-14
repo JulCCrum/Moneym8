@@ -25,7 +25,7 @@ struct Moneym8App: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView() // Set HomeView as the initial view instead of ContentView
         }
         .modelContainer(sharedModelContainer)
     }

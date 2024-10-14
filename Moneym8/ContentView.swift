@@ -28,12 +28,12 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            ExpensesView(isExpanded: $isExpanded, isBlurred: $isBlurred)
+            TransactionsView(isExpanded: $isExpanded, isBlurred: $isBlurred)
                 .tabItem {
                     VStack {
                         Image(systemName: "dollarsign.circle.fill")
                             .foregroundColor(selectedTab == 1 ? .black : .gray)
-                        Text("Expenses")
+                        Text("Transactions")
                     }
                 }
                 .tag(1)
