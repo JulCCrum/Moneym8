@@ -51,7 +51,7 @@ struct ContentView: View {
         .accentColor(.black) // This sets the color for the selected tab text
         .overlay(
             GeometryReader { geometry in
-                if selectedTab == 1 { // Only show floating action buttons on Expenses tab
+                if selectedTab == 1 { // Only show floating action buttons on Transactions tab
                     VStack {
                         Spacer()
                         HStack {
