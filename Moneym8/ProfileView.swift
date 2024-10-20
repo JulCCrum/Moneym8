@@ -28,49 +28,97 @@ struct ProfileView: View {
                 Text("Profile")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .padding(.top, 10) // Adjust the top padding to move the title higher
+                    .padding(.top, 15)
                     .padding(.leading)
 
-                List {
+                VStack(spacing: 15) {
                     NavigationLink(destination: InsightsView(userProfile: userProfile, isEditing: $isEditing)) {
                         HStack {
                             Image(systemName: "chart.bar.fill")
                                 .foregroundColor(.blue)
                             Text("Insights")
+                                .foregroundColor(.black)
                         }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
                     }
+
                     NavigationLink(destination: ProfileHelpView()) {
                         HStack {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                             Text("Help")
+                                .foregroundColor(.black)
                         }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
                     }
+
                     NavigationLink(destination: PreferencesView()) {
                         HStack {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.green)
                             Text("Preferences")
+                                .foregroundColor(.black)
                         }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
                     }
+
                     NavigationLink(destination: SubscriptionView()) {
                         HStack {
                             Image(systemName: "creditcard.fill")
                                 .foregroundColor(.purple)
                             Text("Subscription")
+                                .foregroundColor(.black)
                         }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
                     }
+
                     NavigationLink(destination: AboutView()) {
                         HStack {
                             Image(systemName: "info.circle.fill")
                                 .foregroundColor(.gray)
                             Text("About")
+                                .foregroundColor(.black)
                         }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
                     }
                 }
-                .listStyle(InsetGroupedListStyle())
+                .padding(.horizontal)
+
+                Spacer()
             }
+            .background(Color.white)
         }
+        .background(Color.white)
     }
 }
 
