@@ -156,36 +156,56 @@ struct HomeView: View {
 // MARK: - Subviews for Different Charts
 
 struct LineChartView: View {
+    // Sample data - you can replace with your actual data
+    let data: [(String, Double)] = [
+        ("Jan", 50),
+        ("Feb", 50),
+        ("Mar", 50),
+        ("Apr", 85),
+        ("May", 85),
+        ("Jun", 85)
+    ]
+    
     var body: some View {
         Chart {
-            // Area mark to fill color under the line
-            AreaMark(
-                x: .value("Time", "Jan"),
-                yStart: .value("Amount", 0),
-                yEnd: .value("Amount", 200)
-            )
-            .foregroundStyle(Gradient(colors: [.green.opacity(0.4), .clear]))
-            .interpolationMethod(.catmullRom)
-
-            // Main line chart (actual line)
-            LineMark(
-                x: .value("Time", "Jan"),
-                y: .value("Amount", 200)
-            )
-            .foregroundStyle(.green)
-            .interpolationMethod(.catmullRom)
+            // Area mark for the gradient fill
+            ForEach(data, id: \.0) { item in
+                AreaMark(
+                    x: .value("Month", item.0),
+                    y: .value("Amount", item.1)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        stops: [
+                            .init(color: Color.green.opacity(0.2), location: 0),
+                            .init(color: Color.green.opacity(0.05), location: 1)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .interpolationMethod(.catmullRom) // Smooth curve
+            }
             
-            // Projected line (dashed)
-            LineMark(
-                x: .value("Time", "Feb"),
-                y: .value("Amount", 300)
-            )
-            .lineStyle(StrokeStyle(lineWidth: 2, dash: [5]))
-            .foregroundStyle(.gray)
-            .interpolationMethod(.catmullRom)
+            // Line mark for the main line
+            ForEach(data, id: \.0) { item in
+                LineMark(
+                    x: .value("Month", item.0),
+                    y: .value("Amount", item.1)
+                )
+                .foregroundStyle(Color.green)
+                .lineStyle(StrokeStyle(lineWidth: 2))
+                .interpolationMethod(.catmullRom) // Smooth curve
+            }
         }
-        .chartXAxis(.hidden) // Hides the x-axis grid
-        .chartYAxis(.hidden) // Hides the y-axis grid
+        .chartXAxis {
+            AxisMarks { _ in
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0))
+                AxisTick(stroke: StrokeStyle(lineWidth: 0))
+                AxisValueLabel() // This will show the labels
+            }
+        }
+        .chartYAxis(.hidden) // Hides the y-axis completely
     }
 }
 
