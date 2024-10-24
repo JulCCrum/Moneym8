@@ -44,7 +44,7 @@ struct ProfileView: View {
                         .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.black, lineWidth: 1)
+                                .stroke(Color.black, lineWidth: 3)
                         )
                     }
 
@@ -60,7 +60,7 @@ struct ProfileView: View {
                         .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.black, lineWidth: 1)
+                                .stroke(Color.black, lineWidth: 3)
                         )
                     }
 
@@ -76,7 +76,7 @@ struct ProfileView: View {
                         .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.black, lineWidth: 1)
+                                .stroke(Color.black, lineWidth: 3)
                         )
                     }
 
@@ -92,7 +92,7 @@ struct ProfileView: View {
                         .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.black, lineWidth: 1)
+                                .stroke(Color.black, lineWidth: 3)
                         )
                     }
 
@@ -108,7 +108,7 @@ struct ProfileView: View {
                         .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.black, lineWidth: 1)
+                                .stroke(Color.black, lineWidth: 3)
                         )
                     }
                 }

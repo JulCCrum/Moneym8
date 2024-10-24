@@ -83,7 +83,7 @@ struct HomeView: View {
 
             // Summary Section Below the Chart
             VStack(alignment: .leading, spacing: 20) {
-                Text("Transaction Categories Summary")
+                Text("Categories Summary")
                     .font(.headline)
                     .padding(.leading)
 
@@ -118,7 +118,7 @@ struct HomeView: View {
 
                 HStack {
                     VStack {
-                        Text("Transport")
+                        Text("Transportation")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         Text("$150")
@@ -156,7 +156,6 @@ struct HomeView: View {
 // MARK: - Subviews for Different Charts
 
 struct LineChartView: View {
-    // Sample data - you can replace with your actual data
     let data: [(String, Double)] = [
         ("Jan", 50),
         ("Feb", 50),
@@ -178,13 +177,13 @@ struct LineChartView: View {
                     LinearGradient(
                         stops: [
                             .init(color: Color.green.opacity(0.2), location: 0),
-                            .init(color: Color.green.opacity(0.05), location: 1)
+                            .init(color: Color.green.opacity(0.005), location: 1)
                         ],
                         startPoint: .top,
                         endPoint: .bottom
                     )
                 )
-                .interpolationMethod(.catmullRom) // Smooth curve
+                .interpolationMethod(.catmullRom)
             }
             
             // Line mark for the main line
@@ -195,17 +194,19 @@ struct LineChartView: View {
                 )
                 .foregroundStyle(Color.green)
                 .lineStyle(StrokeStyle(lineWidth: 2))
-                .interpolationMethod(.catmullRom) // Smooth curve
+                .interpolationMethod(.catmullRom)
             }
         }
         .chartXAxis {
             AxisMarks { _ in
                 AxisGridLine(stroke: StrokeStyle(lineWidth: 0))
                 AxisTick(stroke: StrokeStyle(lineWidth: 0))
-                AxisValueLabel() // This will show the labels
+                AxisValueLabel()
             }
         }
-        .chartYAxis(.hidden) // Hides the y-axis completely
+        .chartYAxis(.hidden)
+        .frame(maxWidth: .infinity) // Makes the chart take full width
+        .padding(.horizontal, 0) // Removes horizontal padding
     }
 }
 
