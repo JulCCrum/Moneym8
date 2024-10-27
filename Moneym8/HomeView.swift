@@ -45,9 +45,8 @@ struct HomeView: View {
                 Spacer()
                 switch selectedChart {
                 case .line:
-                    LineChartView()
-                        .frame(height: 200)
-                        .padding()
+                    LineChartView(timeframe: selectedTimePeriod)
+                        .frame(height: 200)                        .padding()
                 case .bar:
                     BarChartView()
                         .frame(height: 200)
@@ -154,61 +153,6 @@ struct HomeView: View {
 }
 
 // MARK: - Subviews for Different Charts
-
-struct LineChartView: View {
-    let data: [(String, Double)] = [
-        ("Jan", 50),
-        ("Feb", 50),
-        ("Mar", 50),
-        ("Apr", 85),
-        ("May", 85),
-        ("Jun", 85)
-    ]
-    
-    var body: some View {
-        Chart {
-            // Area mark for the gradient fill
-            ForEach(data, id: \.0) { item in
-                AreaMark(
-                    x: .value("Month", item.0),
-                    y: .value("Amount", item.1)
-                )
-                .foregroundStyle(
-                    LinearGradient(
-                        stops: [
-                            .init(color: Color.green.opacity(0.2), location: 0),
-                            .init(color: Color.green.opacity(0.005), location: 1)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .interpolationMethod(.catmullRom)
-            }
-            
-            // Line mark for the main line
-            ForEach(data, id: \.0) { item in
-                LineMark(
-                    x: .value("Month", item.0),
-                    y: .value("Amount", item.1)
-                )
-                .foregroundStyle(Color.green)
-                .lineStyle(StrokeStyle(lineWidth: 2))
-                .interpolationMethod(.catmullRom)
-            }
-        }
-        .chartXAxis {
-            AxisMarks { _ in
-                AxisGridLine(stroke: StrokeStyle(lineWidth: 0))
-                AxisTick(stroke: StrokeStyle(lineWidth: 0))
-                AxisValueLabel()
-            }
-        }
-        .chartYAxis(.hidden)
-        .frame(maxWidth: .infinity) // Makes the chart take full width
-        .padding(.horizontal, 0) // Removes horizontal padding
-    }
-}
 
 struct BarChartView: View {
     var body: some View {
