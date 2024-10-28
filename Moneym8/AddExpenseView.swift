@@ -3,12 +3,14 @@ import Foundation
 
 struct AddExpenseView: View {
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var viewModel: TransactionViewModel  // Add this line
     @State private var amount: String = ""
-    @State private var selectedCategory: String = "Other"
+    @State private var selectedCategory: String = "Salary"
     @State private var date: Date = Date()
     @State private var note: String = ""
     
-    let categories = ["Rent", "Food", "Transportation", "Other"]
+    // Different categories for income
+    let categories = ["Salary", "Investment", "Gift", "Other"]
     
     var body: some View {
         NavigationView {
@@ -38,19 +40,19 @@ struct AddExpenseView: View {
                     TextField("Add a note", text: $note)
                 }
             }
-            .navigationTitle("Add Expense")
+            .navigationTitle("Add Income")
             .navigationBarItems(
                 leading: Button("Cancel") {
                     presentationMode.wrappedValue.dismiss()
                 },
                 trailing: Button("Save") {
-                    saveExpense()
+                    saveIncome()
                 }
             )
         }
     }
     
-    private func saveExpense() {
+    private func saveIncome() {
         guard let amountValue = Double(amount), amountValue > 0 else {
             // Show error if amount is invalid
             return
@@ -58,21 +60,20 @@ struct AddExpenseView: View {
         
         let transaction = Transaction(
             amount: amountValue,
-            isIncome: false,
+            isIncome: true,
             date: date,
             category: selectedCategory
         )
         
-        // Here we'll add code to save the transaction
-        // For now, just print it
-        print("Saved expense: \(transaction)")
+        viewModel.addTransaction(transaction)  // Add this line
+        print("Saved income: \(transaction)")
         
         presentationMode.wrappedValue.dismiss()
     }
 }
 
-struct AddExpenseView_Previews: PreviewProvider {
+struct AddIncomeView_Previews: PreviewProvider {
     static var previews: some View {
-        AddExpenseView()
+        AddIncomeView(viewModel: TransactionViewModel())  // Update this line
     }
 }
