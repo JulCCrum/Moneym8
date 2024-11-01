@@ -3,6 +3,7 @@ import SwiftUI
 struct TransactionsView: View {
     @Binding var isExpanded: Bool
     @Binding var isBlurred: Bool
+    @ObservedObject var viewModel: TransactionViewModel
     
     var body: some View {
         GeometryReader { geometry in
@@ -31,4 +32,12 @@ struct TransactionsView: View {
             }
         }
     }
+}
+
+#Preview {
+    TransactionsView(
+        isExpanded: .constant(false),
+        isBlurred: .constant(false),
+        viewModel: TransactionViewModel()
+    )
 }

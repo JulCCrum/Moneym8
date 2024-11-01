@@ -4,14 +4,14 @@
 //
 //  Created by chase Crummedyo on 10/25/24.
 //
-
 import SwiftUI
 import Charts
 
 struct LineChartView: View {
+    @ObservedObject var viewModel: TransactionViewModel
     let timeframe: String
     
-    var filteredData: [(String, Double)] {
+    private var data: [(String, Double)] {
         switch timeframe {
         case "1D":
             return [
@@ -35,7 +35,7 @@ struct LineChartView: View {
                 ("Sep", 900),
                 ("Dec", 1200)
             ]
-        default: // 1M (default case)
+        default: // 1M
             return [
                 ("Week 1", 500),
                 ("Week 2", 600),
@@ -47,8 +47,7 @@ struct LineChartView: View {
     
     var body: some View {
         Chart {
-            // Gradient area under the line
-            ForEach(filteredData, id: \.0) { item in
+            ForEach(data, id: \.0) { item in
                 AreaMark(
                     x: .value("Time", item.0),
                     y: .value("Amount", item.1)
@@ -66,8 +65,7 @@ struct LineChartView: View {
                 .interpolationMethod(.catmullRom)
             }
             
-            // Main line
-            ForEach(filteredData, id: \.0) { item in
+            ForEach(data, id: \.0) { item in
                 LineMark(
                     x: .value("Time", item.0),
                     y: .value("Amount", item.1)
@@ -82,15 +80,11 @@ struct LineChartView: View {
                 AxisGridLine(stroke: StrokeStyle(lineWidth: 0))
                 AxisTick(stroke: StrokeStyle(lineWidth: 0))
                 AxisValueLabel()
+                    .foregroundStyle(.gray)
             }
         }
         .chartYAxis(.hidden)
         .frame(maxWidth: .infinity)
         .frame(height: 200)
     }
-}
-
-#Preview {
-    LineChartView(timeframe: "1M")
-        .padding()
 }

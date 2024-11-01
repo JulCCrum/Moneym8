@@ -9,6 +9,7 @@ enum ChartType: String, CaseIterable {
 }
 
 struct HomeView: View {
+    @ObservedObject var viewModel: TransactionViewModel
     @State private var selectedChart: ChartType = .bar
     @State private var selectedTimePeriod: String = "1M"
 
@@ -31,7 +32,7 @@ struct HomeView: View {
             } label: {
                 HStack {
                     Text(selectedChart.rawValue)
-                    Image(systemName: "chevron.down") // Add downward caret icon
+                    Image(systemName: "chevron.down")
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
@@ -45,10 +46,11 @@ struct HomeView: View {
                 Spacer()
                 switch selectedChart {
                 case .line:
-                    LineChartView(timeframe: selectedTimePeriod)
-                        .frame(height: 200)                        .padding()
+                    LineChartView(viewModel: viewModel, timeframe: selectedTimePeriod)
+                        .frame(height: 200)
+                        .padding()
                 case .bar:
-                    BarChartView()
+                    BarChartView(viewModel: viewModel, timeframe: selectedTimePeriod)
                         .frame(height: 200)
                         .padding()
                 case .progress:
@@ -72,13 +74,13 @@ struct HomeView: View {
                         Text(period)
                             .frame(width: 40, height: 40)
                             .background(selectedTimePeriod == period ? Color.gray.opacity(0.3) : Color.clear)
-                            .clipShape(Circle()) // Keep buttons circular
+                            .clipShape(Circle())
                     }
                 }
             }
             .padding(.horizontal)
-            .frame(maxWidth: .infinity) // Make HStack take full width
-            .multilineTextAlignment(.center) // Center align the HStack contents
+            .frame(maxWidth: .infinity)
+            .multilineTextAlignment(.center)
 
             // Summary Section Below the Chart
             VStack(alignment: .leading, spacing: 20) {
@@ -146,34 +148,15 @@ struct HomeView: View {
             }
             .padding(.top, 20)
 
-            Spacer() // Pushes content to the top
+            Spacer()
         }
-        .padding(.bottom, 20) // Padding at the bottom for spacing
+        .padding(.bottom, 20)
     }
 }
 
-// MARK: - Subviews for Different Charts
-
-struct BarChartView: View {
-    var body: some View {
-        Chart {
-            BarMark(
-                x: .value("Category", "Rent"),
-                y: .value("Amount", 500)
-            )
-            BarMark(
-                x: .value("Category", "Food"),
-                y: .value("Amount", 300)
-            )
-            BarMark(
-                x: .value("Category", "Transport"),
-                y: .value("Amount", 150)
-            )
-            BarMark(
-                x: .value("Category", "Other"),
-                y: .value("Amount", 200)
-            )
-        }
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView(viewModel: TransactionViewModel())
     }
 }
 
@@ -197,7 +180,6 @@ struct SankeyChartView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Placeholder for Sankey Diagram paths
                 Path { path in
                     let startX = geometry.size.width * 0.1
                     let startY = geometry.size.height * 0.3
@@ -211,15 +193,7 @@ struct SankeyChartView: View {
                 }
                 .stroke(Color.blue, lineWidth: 8)
                 .opacity(0.5)
-
-                // Add more paths to represent different flows in the Sankey diagram
             }
         }
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
     }
 }

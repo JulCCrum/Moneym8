@@ -18,7 +18,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView()
+            HomeView(viewModel: transactionViewModel)
                 .tabItem {
                     VStack {
                         Image(systemName: "house.fill")
@@ -27,7 +27,7 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            TransactionsView(isExpanded: $isExpanded, isBlurred: $isBlurred)
+            TransactionsView(isExpanded: $isExpanded, isBlurred: $isBlurred, viewModel: transactionViewModel)
                 .tabItem {
                     VStack {
                         Image(systemName: "dollarsign.circle.fill")
@@ -88,8 +88,6 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }

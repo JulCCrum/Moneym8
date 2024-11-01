@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct Moneym8App: App {
+    @StateObject private var transactionViewModel = TransactionViewModel()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,8 +27,8 @@ struct Moneym8App: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView() // Set HomeView as the initial view instead of ContentView
+            HomeView(viewModel: transactionViewModel)  // Pass viewModel here
+                .modelContainer(sharedModelContainer)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
