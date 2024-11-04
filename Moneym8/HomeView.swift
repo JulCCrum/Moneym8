@@ -54,11 +54,11 @@ struct HomeView: View {
                         .frame(height: 200)
                         .padding()
                 case .progress:
-                    ProgressCircleView()
+                    ProgressCircleView(viewModel: viewModel, timeframe: selectedTimePeriod)
                         .frame(height: 200)
                         .padding()
                 case .sankey:
-                    SankeyChartView()
+                    SankeyChartView(viewModel: viewModel, timeframe: selectedTimePeriod)
                         .frame(height: 200)
                         .padding()
                 }
@@ -93,7 +93,7 @@ struct HomeView: View {
                         Text("Rent")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        Text("$500")
+                        Text("$\(Int(viewModel.getCategoryTotal(category: "Rent")))")
                             .font(.title2)
                             .fontWeight(.bold)
                     }
@@ -106,7 +106,7 @@ struct HomeView: View {
                         Text("Food")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        Text("$300")
+                        Text("$\(Int(viewModel.getCategoryTotal(category: "Food")))")
                             .font(.title2)
                             .fontWeight(.bold)
                     }
@@ -122,7 +122,7 @@ struct HomeView: View {
                         Text("Transportation")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        Text("$150")
+                        Text("$\(Int(viewModel.getCategoryTotal(category: "Transportation")))")
                             .font(.title2)
                             .fontWeight(.bold)
                     }
@@ -135,7 +135,7 @@ struct HomeView: View {
                         Text("Other")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        Text("$200")
+                        Text("$\(Int(viewModel.getCategoryTotal(category: "Other")))")
                             .font(.title2)
                             .fontWeight(.bold)
                     }
@@ -157,43 +157,5 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(viewModel: TransactionViewModel())
-    }
-}
-
-struct ProgressCircleView: View {
-    var body: some View {
-        ZStack {
-            Circle()
-                .trim(from: 0, to: 0.75)
-                .stroke(Color.green, lineWidth: 15)
-                .rotationEffect(.degrees(-90))
-                .frame(width: 150, height: 150)
-            
-            Text("75%")
-                .font(.title)
-                .fontWeight(.bold)
-        }
-    }
-}
-
-struct SankeyChartView: View {
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Path { path in
-                    let startX = geometry.size.width * 0.1
-                    let startY = geometry.size.height * 0.3
-                    let endX = geometry.size.width * 0.9
-                    let endY = geometry.size.height * 0.7
-
-                    path.move(to: CGPoint(x: startX, y: startY))
-                    path.addCurve(to: CGPoint(x: endX, y: endY),
-                                  control1: CGPoint(x: geometry.size.width * 0.3, y: geometry.size.height * 0.1),
-                                  control2: CGPoint(x: geometry.size.width * 0.7, y: geometry.size.height * 0.9))
-                }
-                .stroke(Color.blue, lineWidth: 8)
-                .opacity(0.5)
-            }
-        }
     }
 }
