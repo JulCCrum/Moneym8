@@ -21,6 +21,7 @@ struct HomeView: View {
                 .fontWeight(.bold)
                 .padding(.top, 15)
                 .padding(.leading)
+                .padding(.bottom, 15)
             
             // Dropdown Button for Chart Type Selection
             Menu {

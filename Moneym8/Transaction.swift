@@ -4,24 +4,28 @@
 //
 //  Created by chase Crummedyo on 10/27/24.
 //
-
 import Foundation
 
 struct Transaction: Identifiable {
-    let id = UUID()
+    let id: String
     let amount: Double
     let isIncome: Bool
     let date: Date
     let category: String
+    var note: String?
     
-    init(amount: Double, isIncome: Bool, date: Date, category: String) {
+    // Add computed property for formatting
+    var formattedAmount: String {
+        let prefix = isIncome ? "+" : "-"
+        return "\(prefix)$\(String(format: "%.2f", amount))"
+    }
+    
+    init(id: String = UUID().uuidString, amount: Double, isIncome: Bool, date: Date, category: String, note: String? = nil) {
+        self.id = id
         self.amount = amount
         self.isIncome = isIncome
         self.date = date
         self.category = category
-    }
-    
-    var signedAmount: Double {
-        isIncome ? amount : -amount
+        self.note = note
     }
 }
