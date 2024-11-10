@@ -5,6 +5,9 @@
 //  Created by chase Crummedyo on 10/11/24.
 //
 //
+//  ContentView.swift
+//  Moneym8
+//
 import SwiftUI
 
 struct ContentView: View {
@@ -15,35 +18,40 @@ struct ContentView: View {
     @State private var showAddExpense = false
     @State private var showAddIncome = false
     @State private var showHelp = false
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            HomeView(viewModel: transactionViewModel)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "house.fill")
-                        Text("Home")
+        NavigationView {
+            TabView(selection: $selectedTab) {
+                HomeView(viewModel: transactionViewModel)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "house.fill")
+                            Text("Home")
+                        }
                     }
-                }
-                .tag(0)
-            
-            TransactionsView(isExpanded: $isExpanded, isBlurred: $isBlurred, viewModel: transactionViewModel)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "dollarsign.circle.fill")
-                        Text("Transactions")
+                    .tag(0)
+                
+                TransactionsView(isExpanded: $isExpanded, isBlurred: $isBlurred, viewModel: transactionViewModel)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "dollarsign.circle.fill")
+                            Text("Transactions")
+                        }
                     }
-                }
-                .tag(1)
-            
-            ProfileView()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "person.fill")
-                        Text("Profile")
+                    .tag(1)
+                
+                ProfileView()
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "person.fill")
+                            Text("Profile")
+                        }
                     }
-                }
-                .tag(2)
+                    .tag(2)
+            }
+            .preferredColorScheme(isDarkMode ? .dark : .light)
+            .tint(isDarkMode ? .white : .black)
         }
         .overlay(
             Group {
@@ -63,15 +71,20 @@ struct ContentView: View {
             }
         )
         .sheet(isPresented: $showAddExpense) {
-            AddExpenseView(viewModel: transactionViewModel)
+            NavigationView {
+                AddExpenseView(viewModel: transactionViewModel)
+            }
         }
         .sheet(isPresented: $showAddIncome) {
-            AddIncomeView(viewModel: transactionViewModel)
+            NavigationView {
+                AddIncomeView(viewModel: transactionViewModel)
+            }
         }
         .sheet(isPresented: $showHelp) {
-            HelpView()
+            NavigationView {
+                HelpView()
+            }
         }
-        .accentColor(.black)
     }
     
     private func handleButtonTap(_ index: Int) {

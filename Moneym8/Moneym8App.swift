@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct Moneym8App: App {
     @StateObject private var transactionViewModel = TransactionViewModel()
+    @StateObject private var themeManager = ThemeManager()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -27,8 +28,10 @@ struct Moneym8App: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView(viewModel: transactionViewModel)  // Pass viewModel here
+            ContentView()
+                .environmentObject(themeManager)
                 .modelContainer(sharedModelContainer)
+                .tint(.appGreen)
         }
     }
 }

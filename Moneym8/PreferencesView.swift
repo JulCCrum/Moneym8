@@ -4,43 +4,41 @@
 //
 //  Created by chase Crummedyo on 11/8/24.
 //
+//
+//  PreferencesView.swift
+//  Moneym8
+//
 import SwiftUI
 
 struct PreferencesView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var isDarkMode = false
-    @State private var useFaceID = false
-    @State private var defaultCurrency = "USD"
-    @State private var notificationsEnabled = true
-    
-    let currencies = ["USD", "EUR", "GBP", "CAD", "AUD"]
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Appearance")) {
+                Section(header: Text("GENERAL")) {
+                    Toggle("Notifications", isOn: .constant(true))
+                }
+                
+                Section(header: Text("DISPLAY")) {
                     Toggle("Dark Mode", isOn: $isDarkMode)
                 }
                 
-                Section(header: Text("Security")) {
-                    Toggle("Use Face ID", isOn: $useFaceID)
+                Section(header: Text("CURRENCY")) {
+                    Text("USD ($)")
                 }
                 
-                Section(header: Text("Currency")) {
-                    Picker("Default Currency", selection: $defaultCurrency) {
-                        ForEach(currencies, id: \.self) { currency in
-                            Text(currency).tag(currency)
-                        }
+                Section(header: Text("DATA")) {
+                    Button("Export Data") {
+                        // Handle export
                     }
-                }
-                
-                Section(header: Text("Notifications")) {
-                    Toggle("Enable Notifications", isOn: $notificationsEnabled)
-                    if notificationsEnabled {
-                        Text("You'll receive notifications about your spending limits and budget goals")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                    .foregroundColor(.blue)
+                    
+                    Button("Clear All Data") {
+                        // Handle clear
                     }
+                    .foregroundColor(.red)
                 }
             }
             .navigationTitle("Preferences")
@@ -48,9 +46,15 @@ struct PreferencesView: View {
                 presentationMode.wrappedValue.dismiss()
             })
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
+        .onChange(of: isDarkMode) { oldValue, newValue in
+            UserDefaults.standard.synchronize()
+        }
     }
 }
 
-#Preview {
-    PreferencesView()
+struct PreferencesView_Previews: PreviewProvider {
+    static var previews: some View {
+        PreferencesView()
+    }
 }

@@ -29,9 +29,22 @@
 		CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Moneym8UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CAC7D2C32CE038AA00877E88 /* Exceptions for "Moneym8" folder in "Moneym8" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Untitled.swift,
+			);
+			target = CA41D9A02CB98313000DCD06 /* Moneym8 */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CA41D9A32CB98313000DCD06 /* Moneym8 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CAC7D2C32CE038AA00877E88 /* Exceptions for "Moneym8" folder in "Moneym8" target */,
+			);
 			path = Moneym8;
 			sourceTree = "<group>";
 		};

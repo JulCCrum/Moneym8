@@ -1,3 +1,15 @@
+//
+//  HomeView.swift
+//  Moneym8
+//
+//
+//  HomeView.swift
+//  Moneym8
+//
+//
+//  HomeView.swift
+//  Moneym8
+//
 import SwiftUI
 import Charts
 
@@ -12,6 +24,15 @@ struct HomeView: View {
     @ObservedObject var viewModel: TransactionViewModel
     @State private var selectedChart: ChartType = .bar
     @State private var selectedTimePeriod: String = "1M"
+    @Environment(\.colorScheme) var colorScheme
+
+    // Define category colors
+    private let categoryColors = [
+        "Rent": (light: Color.blue.opacity(0.1), dark: Color(hex: "0039CB")), // Bright blue
+        "Food": (light: Color.green.opacity(0.1), dark: Color(hex: "2E7D32")), // Bright green
+        "Transportation": (light: Color.orange.opacity(0.1), dark: Color(hex: "F57C00")), // Bright orange
+        "Other": (light: Color.purple.opacity(0.1), dark: Color(hex: "7B1FA2")) // Bright purple
+    ]
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -37,8 +58,9 @@ struct HomeView: View {
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
-                .background(Color.gray.opacity(0.2))
+                .background(colorScheme == .dark ? Color.gray.opacity(0.3) : Color.gray.opacity(0.2))
                 .cornerRadius(10)
+                .foregroundColor(colorScheme == .dark ? .white : .black)
             }
             .padding(.leading)
 
@@ -74,7 +96,12 @@ struct HomeView: View {
                     }) {
                         Text(period)
                             .frame(width: 40, height: 40)
-                            .background(selectedTimePeriod == period ? Color.gray.opacity(0.3) : Color.clear)
+                            .background(
+                                selectedTimePeriod == period ?
+                                (colorScheme == .dark ? Color.gray.opacity(0.5) : Color.gray.opacity(0.3)) :
+                                Color.clear
+                            )
+                            .foregroundColor(colorScheme == .dark ? .white : .black)
                             .clipShape(Circle())
                     }
                 }
@@ -93,27 +120,29 @@ struct HomeView: View {
                     VStack {
                         Text("Rent")
                             .font(.subheadline)
-                            .foregroundColor(.gray)
+                            .foregroundColor(colorScheme == .dark ? .white : .gray)
                         Text("$\(Int(viewModel.getCategoryTotal(category: "Rent")))")
                             .font(.title2)
                             .fontWeight(.bold)
+                            .foregroundColor(.white)
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue.opacity(0.1))
+                    .background(colorScheme == .dark ? categoryColors["Rent"]!.dark : categoryColors["Rent"]!.light)
                     .cornerRadius(10)
 
                     VStack {
                         Text("Food")
                             .font(.subheadline)
-                            .foregroundColor(.gray)
+                            .foregroundColor(colorScheme == .dark ? .white : .gray)
                         Text("$\(Int(viewModel.getCategoryTotal(category: "Food")))")
                             .font(.title2)
                             .fontWeight(.bold)
+                            .foregroundColor(.white)
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.green.opacity(0.1))
+                    .background(colorScheme == .dark ? categoryColors["Food"]!.dark : categoryColors["Food"]!.light)
                     .cornerRadius(10)
                 }
                 .padding(.horizontal)
@@ -122,27 +151,29 @@ struct HomeView: View {
                     VStack {
                         Text("Transportation")
                             .font(.subheadline)
-                            .foregroundColor(.gray)
+                            .foregroundColor(colorScheme == .dark ? .white : .gray)
                         Text("$\(Int(viewModel.getCategoryTotal(category: "Transportation")))")
                             .font(.title2)
                             .fontWeight(.bold)
+                            .foregroundColor(.white)
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.orange.opacity(0.1))
+                    .background(colorScheme == .dark ? categoryColors["Transportation"]!.dark : categoryColors["Transportation"]!.light)
                     .cornerRadius(10)
 
                     VStack {
                         Text("Other")
                             .font(.subheadline)
-                            .foregroundColor(.gray)
+                            .foregroundColor(colorScheme == .dark ? .white : .gray)
                         Text("$\(Int(viewModel.getCategoryTotal(category: "Other")))")
                             .font(.title2)
                             .fontWeight(.bold)
+                            .foregroundColor(.white)
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.purple.opacity(0.1))
+                    .background(colorScheme == .dark ? categoryColors["Other"]!.dark : categoryColors["Other"]!.light)
                     .cornerRadius(10)
                 }
                 .padding(.horizontal)

@@ -4,6 +4,10 @@
 //
 //  Created by chase Crummedyo on 10/27/24.
 //
+//
+//  FloatingActionButtons.swift
+//  Moneym8
+//
 import SwiftUI
 
 struct FloatingActionButtons: View {
@@ -12,6 +16,7 @@ struct FloatingActionButtons: View {
     let handleButtonTap: (Int) -> Void
     let toggleExpanded: () -> Void
     private let buttons = ["minus", "plus", "questionmark"]
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         GeometryReader { geometry in
@@ -26,9 +31,10 @@ struct FloatingActionButtons: View {
                             } label: {
                                 Image(systemName: buttons[index])
                                     .frame(width: 44, height: 44)
-                                    .background(Color.black)
+                                    .background(colorScheme == .dark ? Color(hex: "404040") : .black)
                                     .foregroundColor(.white)
                                     .clipShape(Circle())
+                                    .shadow(color: .black.opacity(0.15), radius: 5, x: 0, y: 2)
                             }
                             .offset(x: isExpanded ? CGFloat(cos(Double(index) * .pi / 4 + .pi)) * 80 : 0,
                                     y: isExpanded ? CGFloat(sin(Double(index) * .pi / 4 + .pi)) * 80 : 0)
@@ -44,7 +50,7 @@ struct FloatingActionButtons: View {
                                 .background(Color.green)
                                 .foregroundColor(.white)
                                 .clipShape(Circle())
-                                .shadow(radius: 10)
+                                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 4)
                         }
                     }
                     .offset(x: -geometry.size.width / 10, y: -15)
