@@ -3,7 +3,6 @@
 //  Moneym8
 //
 //  Created by chase Crummedyo on 11/8/24.
-//
 import SwiftUI
 
 struct InsightsView: View {
@@ -12,9 +11,11 @@ struct InsightsView: View {
     var body: some View {
         NavigationView {
             List {
-                Text("Insights and Analytics")
-                // Add insights content here
-                Section(header: Text("Spending Overview")) {
+                Section {
+                    Text("Insights and Analytics")
+                }
+                
+                Section(header: Text("SPENDING OVERVIEW")) {
                     HStack {
                         Text("Total Spending")
                         Spacer()
@@ -30,14 +31,14 @@ struct InsightsView: View {
                     }
                 }
                 
-                Section(header: Text("Category Breakdown")) {
+                Section(header: Text("CATEGORY BREAKDOWN")) {
                     CategoryRow(name: "Rent", amount: 500, color: .blue)
                     CategoryRow(name: "Food", amount: 300, color: .green)
                     CategoryRow(name: "Transportation", amount: 150, color: .orange)
                     CategoryRow(name: "Other", amount: 200, color: .purple)
                 }
                 
-                Section(header: Text("Monthly Trends")) {
+                Section(header: Text("MONTHLY TRENDS")) {
                     Text("Spending is 15% higher than last month")
                         .foregroundColor(.red)
                     Text("Most expensive category: Rent")
@@ -45,6 +46,7 @@ struct InsightsView: View {
                 }
             }
             .navigationTitle("Insights")
+            .navigationBarTitleDisplayMode(.large)
             .navigationBarItems(trailing: Button("Done") {
                 presentationMode.wrappedValue.dismiss()
             })
@@ -61,7 +63,7 @@ struct CategoryRow: View {
         HStack {
             Circle()
                 .fill(color)
-                .frame(width: 12, height: 12)
+                .frame(width: 8, height: 8)
             Text(name)
             Spacer()
             Text("$\(String(format: "%.2f", amount))")

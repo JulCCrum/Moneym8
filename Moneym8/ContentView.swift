@@ -5,9 +5,7 @@
 //  Created by chase Crummedyo on 10/11/24.
 //
 //
-//  ContentView.swift
-//  Moneym8
-//
+
 import SwiftUI
 
 struct ContentView: View {

@@ -1,3 +1,7 @@
+//
+//  TransactionsView.swift
+//  Moneym8
+//
 import SwiftUI
 
 struct TransactionsView: View {
@@ -5,6 +9,7 @@ struct TransactionsView: View {
     @Binding var isBlurred: Bool
     @ObservedObject var viewModel: TransactionViewModel
     @State private var selectedSort: SortOption = .dateDesc
+    @Environment(\.colorScheme) var colorScheme
     
     enum SortOption: String, CaseIterable {
         case dateDesc = "Latest First"
@@ -33,7 +38,6 @@ struct TransactionsView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Title
             Text("Transactions")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -41,7 +45,6 @@ struct TransactionsView: View {
                 .padding(.leading)
                 .padding(.bottom, 8)
             
-            // Sort Dropdown
             Menu {
                 Picker("Sort by", selection: $selectedSort) {
                     ForEach(SortOption.allCases, id: \.self) { option in
@@ -55,16 +58,17 @@ struct TransactionsView: View {
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .background(Color.gray.opacity(0.2))
+                .background(colorScheme == .dark ? Color(hex: "404040") : Color.gray.opacity(0.2))
+                .foregroundColor(colorScheme == .dark ? .white : .black)
                 .cornerRadius(10)
             }
             .padding(.leading)
             .padding(.bottom, 20)
             
-            // Transactions List - Updated to pass viewModel
             List {
                 ForEach(sortedTransactions) { transaction in
                     TransactionRow(transaction: transaction, viewModel: viewModel)
+                        .listRowBackground(Color.clear)
                 }
                 .onDelete { indexSet in
                     let transactionsToDelete = indexSet.map { sortedTransactions[$0] }
@@ -94,53 +98,50 @@ struct TransactionsView: View {
     }
 }
 
-// Keep TransactionRow as a separate view in the same file or in its own file
 struct TransactionRow: View {
     let transaction: Transaction
-    @State private var showingDetail = false
     @ObservedObject var viewModel: TransactionViewModel
+    @State private var showingDetail = false
+    @Environment(\.colorScheme) var colorScheme
+    
+    private let categoryColors = [
+        "Rent": (light: Color.blue.opacity(0.1), dark: Color(hex: "0039CB")),
+        "Food": (light: Color.green.opacity(0.1), dark: Color(hex: "2E7D32")),
+        "Transportation": (light: Color.orange.opacity(0.1), dark: Color(hex: "F57C00")),
+        "Other": (light: Color.purple.opacity(0.1), dark: Color(hex: "7B1FA2"))
+    ]
     
     var body: some View {
         Button(action: { showingDetail = true }) {
             HStack {
-                // Category Icon
                 ZStack {
                     Circle()
-                        .fill(categoryColor.opacity(0.2))
+                        .fill(colorScheme == .dark ?
+                              categoryColors[transaction.category]?.dark ?? Color.gray :
+                              categoryColors[transaction.category]?.light ?? Color.gray.opacity(0.1))
                         .frame(width: 40, height: 40)
                     Text(categoryEmoji)
                 }
                 
-                // Transaction Details
                 VStack(alignment: .leading) {
                     Text(transaction.category)
                         .font(.headline)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
                     Text(formatDate(transaction.date))
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color(hex: "808080"))
                 }
                 
                 Spacer()
                 
-                // Amount
                 Text(formatAmount(transaction.amount, isIncome: transaction.isIncome))
                     .font(.headline)
                     .foregroundColor(transaction.isIncome ? .green : .red)
             }
             .padding(.vertical, 4)
         }
-        .sheet(isPresented: $showingDetail) {
+        .fullScreenCover(isPresented: $showingDetail) {
             TransactionDetailView(viewModel: viewModel, transaction: transaction)
-        }
-    }
-    
-    private var categoryColor: Color {
-        switch transaction.category {
-        case "Rent": return .blue
-        case "Food": return .green
-        case "Transportation": return .orange
-        case "Other": return .purple
-        default: return .gray
         }
     }
     
@@ -163,5 +164,13 @@ struct TransactionRow: View {
     private func formatAmount(_ amount: Double, isIncome: Bool) -> String {
         let prefix = isIncome ? "+" : "-"
         return "\(prefix)$\(String(format: "%.2f", amount))"
+    }
+}
+
+struct TransactionsView_Previews: PreviewProvider {
+    static var previews: some View {
+        TransactionsView(isExpanded: .constant(false),
+                        isBlurred: .constant(false),
+                        viewModel: TransactionViewModel())
     }
 }

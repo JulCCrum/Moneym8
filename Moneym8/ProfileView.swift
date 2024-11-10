@@ -2,10 +2,14 @@
 //  ProfileView.swift
 //  Moneym8
 //
+//
+//  ProfileView.swift
+//  Moneym8
+//
 import SwiftUI
 
 struct ProfileView: View {
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    @Environment(\.colorScheme) var colorScheme
     @State private var showInsights = false
     @State private var showHelp = false
     @State private var showPreferences = false
@@ -22,112 +26,48 @@ struct ProfileView: View {
                 .padding(.bottom, 20)
             
             List {
-                Button(action: { showInsights = true }) {
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .fill(Color.blue.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            Image(systemName: "chart.bar.fill")
-                                .foregroundColor(.blue)
-                        }
-                        Text("Insights")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .foregroundColor(isDarkMode ? .white : .black)
-                .listRowBackground(Color.clear)
-                
-                Button(action: { showHelp = true }) {
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .fill(Color.orange.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            Image(systemName: "questionmark")
-                                .foregroundColor(.orange)
-                        }
-                        Text("Help")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .foregroundColor(isDarkMode ? .white : .black)
-                .listRowBackground(Color.clear)
-                
-                Button(action: { showPreferences = true }) {
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .fill(Color.green.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            Image(systemName: "gearshape.fill")
-                                .foregroundColor(.green)
-                        }
-                        Text("Preferences")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .foregroundColor(isDarkMode ? .white : .black)
-                .listRowBackground(Color.clear)
-                
-                Button(action: { showSubscription = true }) {
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .fill(Color.purple.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            Image(systemName: "creditcard.fill")
-                                .foregroundColor(.purple)
-                        }
-                        Text("Subscription")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .foregroundColor(isDarkMode ? .white : .black)
-                .listRowBackground(Color.clear)
-                
-                Button(action: { showAbout = true }) {
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            Image(systemName: "info")
+                ForEach([
+                    ("Insights", "chart.bar.fill", Color.blue, $showInsights),
+                    ("Help", "questionmark", Color.orange, $showHelp),
+                    ("Preferences", "gearshape.fill", Color.green, $showPreferences),
+                    ("Subscription", "creditcard.fill", Color.purple, $showSubscription),
+                    ("About", "info", Color.gray, $showAbout)
+                ], id: \.0) { item in
+                    Button(action: { item.3.wrappedValue = true }) {
+                        HStack {
+                            ZStack {
+                                Circle()
+                                    .fill(item.2.opacity(0.2))
+                                    .frame(width: 36, height: 36)
+                                Image(systemName: item.1)
+                                    .foregroundColor(item.2)
+                            }
+                            Text(item.0)
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                            Spacer()
+                            Image(systemName: "chevron.right")
                                 .foregroundColor(.gray)
                         }
-                        Text("About")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
                     }
+                    .listRowBackground(Color.clear)
+                    .padding(.vertical, 8)
                 }
-                .foregroundColor(isDarkMode ? .white : .black)
-                .listRowBackground(Color.clear)
             }
             .listStyle(PlainListStyle())
         }
-        .preferredColorScheme(isDarkMode ? .dark : .light)
-        .sheet(isPresented: $showInsights) {
+        .fullScreenCover(isPresented: $showInsights) {
             InsightsView()
         }
-        .sheet(isPresented: $showHelp) {
+        .fullScreenCover(isPresented: $showHelp) {
             HelpView()
         }
-        .sheet(isPresented: $showPreferences) {
+        .fullScreenCover(isPresented: $showPreferences) {
             PreferencesView()
         }
-        .sheet(isPresented: $showSubscription) {
+        .fullScreenCover(isPresented: $showSubscription) {
             SubscriptionView()
         }
-        .sheet(isPresented: $showAbout) {
+        .fullScreenCover(isPresented: $showAbout) {
             AboutView()
         }
     }

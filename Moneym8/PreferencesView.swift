@@ -16,30 +16,36 @@ struct PreferencesView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("GENERAL")) {
-                    Toggle("Notifications", isOn: .constant(true))
-                }
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)  // This sets the background color for the entire view
                 
-                Section(header: Text("DISPLAY")) {
-                    Toggle("Dark Mode", isOn: $isDarkMode)
-                }
-                
-                Section(header: Text("CURRENCY")) {
-                    Text("USD ($)")
-                }
-                
-                Section(header: Text("DATA")) {
-                    Button("Export Data") {
-                        // Handle export
+                List {
+                    Section(header: Text("GENERAL")) {
+                        Toggle("Notifications", isOn: .constant(true))
                     }
-                    .foregroundColor(.blue)
                     
-                    Button("Clear All Data") {
-                        // Handle clear
+                    Section(header: Text("DISPLAY")) {
+                        Toggle("Dark Mode", isOn: $isDarkMode)
                     }
-                    .foregroundColor(.red)
+                    
+                    Section(header: Text("CURRENCY")) {
+                        Text("USD ($)")
+                    }
+                    
+                    Section(header: Text("DATA")) {
+                        Button("Export Data") {
+                            // Handle export
+                        }
+                        .foregroundColor(.blue)
+                        
+                        Button("Clear All Data") {
+                            // Handle clear
+                        }
+                        .foregroundColor(.red)
+                    }
                 }
+                .listStyle(InsetGroupedListStyle())
+                .scrollContentBackground(.hidden)  // This hides the default list background
             }
             .navigationTitle("Preferences")
             .navigationBarItems(trailing: Button("Done") {
