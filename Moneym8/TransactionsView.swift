@@ -43,7 +43,7 @@ struct TransactionsView: View {
                 .fontWeight(.bold)
                 .padding(.top, 15)
                 .padding(.leading)
-                .padding(.bottom, 8)
+                .padding(.bottom, 20)
             
             Menu {
                 Picker("Sort by", selection: $selectedSort) {
@@ -56,11 +56,11 @@ struct TransactionsView: View {
                     Text(selectedSort.rawValue)
                     Image(systemName: "chevron.down")
                 }
-                .padding(.horizontal, 12)
+                .padding(.horizontal)
                 .padding(.vertical, 8)
-                .background(colorScheme == .dark ? Color(hex: "404040") : Color.gray.opacity(0.2))
-                .foregroundColor(colorScheme == .dark ? .white : .black)
+                .background(colorScheme == .dark ? Color.gray.opacity(0.3) : Color.gray.opacity(0.2))
                 .cornerRadius(10)
+                .foregroundColor(colorScheme == .dark ? .white : .black)
             }
             .padding(.leading)
             .padding(.bottom, 20)
@@ -98,6 +98,7 @@ struct TransactionsView: View {
     }
 }
 
+// Add TransactionRow struct definition
 struct TransactionRow: View {
     let transaction: Transaction
     @ObservedObject var viewModel: TransactionViewModel

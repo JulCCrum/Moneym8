@@ -10,7 +10,19 @@ struct SubscriptionView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        NavigationView {
+        VStack(alignment: .leading, spacing: -15) {
+            // Header
+            HStack {
+                Text("Subscription")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                Spacer()
+                Button("Done") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+            .padding()
+            
             List {
                 Section {
                     VStack(spacing: 16) {
@@ -26,34 +38,38 @@ struct SubscriptionView: View {
                     .padding(.vertical, 20)
                 }
                 
-                Section(header: Text("Features Included")) {
+                Section(header: Text("FEATURES INCLUDED")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))) {
                     FeatureRow(icon: "chart.bar.fill", text: "Advanced Analytics")
                     FeatureRow(icon: "bell.fill", text: "Custom Notifications")
                     FeatureRow(icon: "icloud.fill", text: "Cloud Backup")
                     FeatureRow(icon: "doc.fill", text: "Export Reports")
                 }
                 
-                Section(header: Text("Subscription Options")) {
-                    Button(action: {
+                Section(header: Text("SUBSCRIPTION OPTIONS")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Monthly")
+                            .font(.headline)
+                        Text("$10.00/month")
+                            .foregroundColor(.gray)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
                         // Handle monthly subscription
-                    }) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Monthly")
-                                .font(.headline)
-                            Text("$10.00/month")
-                                .foregroundColor(.gray)
-                        }
                     }
                     
-                    Button(action: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Yearly")
+                            .font(.headline)
+                        Text("$100.00/year")
+                            .foregroundColor(.gray)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
                         // Handle yearly subscription
-                    }) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Yearly")
-                                .font(.headline)
-                            Text("$100.00/year")
-                                .foregroundColor(.gray)
-                        }
                     }
                 }
                 
@@ -63,11 +79,9 @@ struct SubscriptionView: View {
                         .foregroundColor(.gray)
                 }
             }
-            .navigationTitle("Subscription")
-            .navigationBarItems(trailing: Button("Done") {
-                presentationMode.wrappedValue.dismiss()
-            })
+            .listStyle(InsetGroupedListStyle())
         }
+        .background(Color(uiColor: .systemGroupedBackground))
     }
 }
 

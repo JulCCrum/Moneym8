@@ -10,7 +10,19 @@ struct AboutView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        NavigationView {
+        VStack(alignment: .leading, spacing: -15) {
+            // Header
+            HStack {
+                Text("About")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                Spacer()
+                Button("Done") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+            .padding()
+            
             List {
                 Section {
                     VStack(spacing: 12) {
@@ -27,29 +39,36 @@ struct AboutView: View {
                     .padding(.vertical, 20)
                 }
                 
-                Section(header: Text("App Info")) {
+                Section(header: Text("APP INFO")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))) {
                     LabeledContent("Developer", value: "Your Name")
                     LabeledContent("Released", value: "2024")
                     LabeledContent("Framework", value: "SwiftUI")
                 }
                 
-                Section(header: Text("Links")) {
+                Section(header: Text("LINKS")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))) {
                     Link("Privacy Policy", destination: URL(string: "https://example.com/privacy")!)
+                        .foregroundColor(.blue)
                     Link("Terms of Service", destination: URL(string: "https://example.com/terms")!)
+                        .foregroundColor(.blue)
                     Link("Contact Support", destination: URL(string: "https://example.com/support")!)
+                        .foregroundColor(.blue)
                 }
                 
-                Section(header: Text("Legal")) {
+                Section(header: Text("LEGAL")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))) {
                     Text("© 2024 Your Company. All rights reserved.")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
             }
-            .navigationTitle("About")
-            .navigationBarItems(trailing: Button("Done") {
-                presentationMode.wrappedValue.dismiss()
-            })
+            .listStyle(InsetGroupedListStyle())
         }
+        .background(Color(uiColor: .systemGroupedBackground))
     }
 }
 

@@ -1,11 +1,7 @@
 //
 //  HelpView.swift
 //  Moneym8
-//
-//
-//  HelpView.swift
-//  Moneym8
-//
+
 import SwiftUI
 
 struct HelpView: View {
