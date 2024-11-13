@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import FirebaseCore
 import SwiftData
 
 @main
 struct Moneym8App: App {
     @StateObject private var transactionViewModel = TransactionViewModel()
     @StateObject private var themeManager = ThemeManager()
-    
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,6 +26,10 @@ struct Moneym8App: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+
+    init() {
+        FirebaseApp.configure()
+    }
 
     var body: some Scene {
         WindowGroup {
