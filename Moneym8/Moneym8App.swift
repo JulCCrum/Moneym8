@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
-import FirebaseCore
 import SwiftData
+import FirebaseCore
 
 @main
 struct Moneym8App: App {
     @StateObject private var transactionViewModel = TransactionViewModel()
     @StateObject private var themeManager = ThemeManager()
-
+    @StateObject private var authManager = AuthManager.shared
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -33,10 +34,19 @@ struct Moneym8App: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(themeManager)
-                .modelContainer(sharedModelContainer)
-                .tint(.appGreen)
+            Group {
+                if authManager.isAuthenticated {
+                    ContentView()
+                        .environmentObject(themeManager)
+                        .modelContainer(sharedModelContainer)
+                        .tint(.appGreen)
+                } else {
+                    AuthenticationView()
+                        .environmentObject(themeManager)
+                        .modelContainer(sharedModelContainer)
+                        .tint(.appGreen)
+                }
+            }
         }
     }
 }

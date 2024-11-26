@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA054C5F2CF1ACE300AA8384 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = CA054C5E2CF1ACDB00AA8384 /* .gitignore */; };
 		CA68EDD52CE44654006F252F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CA68EDD42CE44654006F252F /* FirebaseAnalytics */; };
 		CA68EDD72CE44654006F252F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = CA68EDD62CE44654006F252F /* FirebaseAnalyticsOnDeviceConversion */; };
 		CA68EDD92CE44654006F252F /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = CA68EDD82CE44654006F252F /* FirebaseAnalyticsWithoutAdIdSupport */; };
@@ -20,6 +21,7 @@
 		CA68EDE92CE447D5006F252F /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = CA68EDE82CE447D5006F252F /* FirebaseMessaging */; };
 		CA68EDEB2CE447D5006F252F /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = CA68EDEA2CE447D5006F252F /* FirebaseRemoteConfig */; };
 		CA68EDED2CE447D5006F252F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = CA68EDEC2CE447D5006F252F /* FirebaseStorage */; };
+		CAB4AB3F2CF1C6E400FC1C37 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CAB4AB3E2CF1C6C600FC1C37 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,9 +42,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA054C5E2CF1ACDB00AA8384 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		CA41D9A12CB98313000DCD06 /* Moneym8.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneym8.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA41D9B32CB98316000DCD06 /* Moneym8Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Moneym8Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Moneym8UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAB4AB3E2CF1C6C600FC1C37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -104,6 +108,8 @@
 		CA41D9982CB98313000DCD06 = {
 			isa = PBXGroup;
 			children = (
+				CAB4AB3E2CF1C6C600FC1C37 /* Info.plist */,
+				CA054C5E2CF1ACDB00AA8384 /* .gitignore */,
 				CA41D9A32CB98313000DCD06 /* Moneym8 */,
 				CA41D9B62CB98316000DCD06 /* Moneym8Tests */,
 				CA41D9C02CB98317000DCD06 /* Moneym8UITests */,
@@ -239,6 +245,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				CA68EDD32CE43D95006F252F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				CAB4AB3D2CF1C4C900FC1C37 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CA41D9A22CB98313000DCD06 /* Products */;
@@ -257,6 +264,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA054C5F2CF1ACE300AA8384 /* .gitignore in Resources */,
+				CAB4AB3F2CF1C6E400FC1C37 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,6 +620,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 11.5.0;
+			};
+		};
+		CAB4AB3D2CF1C4C900FC1C37 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
