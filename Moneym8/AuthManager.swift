@@ -4,7 +4,6 @@
 //
 //  Created by chase Crummedyo on 11/23/24.
 //
-
 import SwiftUI
 import Firebase
 import FirebaseAuth
@@ -12,21 +11,21 @@ import GoogleSignIn
 import AuthenticationServices
 import CryptoKit
 
+@MainActor
 class AuthManager: ObservableObject {
     @Published var user: User?
     @Published var isAuthenticated = false
     @Published var errorMessage: String?
     @Published var isLoading = false
     
-    // Used for Apple Sign In
     fileprivate var currentNonce: String?
     
     static let shared = AuthManager()
     
     init() {
         // Set up authentication state listener
-        Auth.auth().addStateDidChangeListener { [weak self] _, user in
-            DispatchQueue.main.async {
+        _ = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            Task { @MainActor in
                 self?.user = user
                 self?.isAuthenticated = user != nil
             }
@@ -38,16 +37,12 @@ class AuthManager: ObservableObject {
         isLoading = true
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
-            DispatchQueue.main.async {
-                self.user = result.user
-                self.isAuthenticated = true
-                self.isLoading = false
-            }
+            self.user = result.user
+            self.isAuthenticated = true
+            self.isLoading = false
         } catch {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.errorMessage = error.localizedDescription
-            }
+            self.isLoading = false
+            self.errorMessage = error.localizedDescription
             throw error
         }
     }
@@ -56,16 +51,12 @@ class AuthManager: ObservableObject {
         isLoading = true
         do {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
-            DispatchQueue.main.async {
-                self.user = result.user
-                self.isAuthenticated = true
-                self.isLoading = false
-            }
+            self.user = result.user
+            self.isAuthenticated = true
+            self.isLoading = false
         } catch {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.errorMessage = error.localizedDescription
-            }
+            self.isLoading = false
+            self.errorMessage = error.localizedDescription
             throw error
         }
     }
@@ -76,19 +67,25 @@ class AuthManager: ObservableObject {
             throw AuthError.configError("Firebase configuration error")
         }
         
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first,
-              let rootViewController = window.rootViewController else {
+        func getRootViewController() -> UIViewController? {
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first,
+                  let rootViewController = window.rootViewController else {
+                return nil
+            }
+            return rootViewController
+        }
+        
+        guard let rootViewController = getRootViewController() else {
             throw AuthError.configError("No root view controller found")
         }
         
         isLoading = true
         
-        // Configure Google Sign In
-        let config = GIDConfiguration(clientID: clientID)
-        GIDSignIn.sharedInstance.configuration = config
-        
         do {
+            let config = GIDConfiguration(clientID: clientID)
+            GIDSignIn.sharedInstance.configuration = config
+            
             let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
             
             guard let idToken = result.user.idToken?.tokenString else {
@@ -101,17 +98,12 @@ class AuthManager: ObservableObject {
             )
             
             let authResult = try await Auth.auth().signIn(with: credential)
-            
-            DispatchQueue.main.async {
-                self.user = authResult.user
-                self.isAuthenticated = true
-                self.isLoading = false
-            }
+            self.user = authResult.user
+            self.isAuthenticated = true
+            self.isLoading = false
         } catch {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.errorMessage = error.localizedDescription
-            }
+            self.isLoading = false
+            self.errorMessage = error.localizedDescription
             throw error
         }
     }
@@ -142,24 +134,20 @@ class AuthManager: ObservableObject {
                 throw AuthError.signInError("Invalid Apple credentials")
             }
             
-            let credential = OAuthProvider.credential(
-                withProviderID: "apple.com",
-                idToken: idTokenString,
-                rawNonce: nonce
+            let credential = OAuthProvider.appleCredential(
+                withIDToken: idTokenString,
+                rawNonce: nonce,
+                fullName: appleIDCredential.fullName
             )
             
             let authResult = try await Auth.auth().signIn(with: credential)
+            self.user = authResult.user
+            self.isAuthenticated = true
+            self.isLoading = false
             
-            DispatchQueue.main.async {
-                self.user = authResult.user
-                self.isAuthenticated = true
-                self.isLoading = false
-            }
         } catch {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.errorMessage = error.localizedDescription
-            }
+            self.isLoading = false
+            self.errorMessage = error.localizedDescription
             throw error
         }
     }
@@ -169,10 +157,8 @@ class AuthManager: ObservableObject {
         do {
             try Auth.auth().signOut()
             GIDSignIn.sharedInstance.signOut()
-            DispatchQueue.main.async {
-                self.user = nil
-                self.isAuthenticated = false
-            }
+            self.user = nil
+            self.isAuthenticated = false
         } catch {
             errorMessage = error.localizedDescription
             throw error
@@ -188,8 +174,7 @@ class AuthManager: ObservableObject {
             fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
         }
         
-        let charset: [Character] =
-        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        let charset = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         
         let nonce = randomBytes.map { byte in
             charset[Int(byte) % charset.count]
@@ -210,8 +195,8 @@ class AuthManager: ObservableObject {
 }
 
 enum AuthError: LocalizedError {
-    case configError(String)
-    case signInError(String)
+    case configError(_ message: String)
+    case signInError(_ message: String)
     
     var errorDescription: String? {
         switch self {
