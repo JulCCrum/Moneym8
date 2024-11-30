@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseAuth
 
 struct AuthenticationView: View {
     @StateObject private var authManager = AuthManager.shared

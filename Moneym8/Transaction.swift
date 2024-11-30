@@ -3,10 +3,10 @@
 //  Moneym8
 //
 //  Created by chase Crummedyo on 10/27/24.
-//
+
 import Foundation
 
-struct Transaction: Identifiable {
+struct Transaction: Identifiable, Codable {
     let id: String
     let amount: Double
     let isIncome: Bool

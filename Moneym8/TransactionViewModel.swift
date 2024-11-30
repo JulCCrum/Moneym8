@@ -5,72 +5,55 @@
 //  Created by chase Crummedyo on 10/27/24.
 //
 //
+//
+//
+//  TransactionViewModel.swift
+//  Moneym8
+//
+//  Created by chase Crummedyo on 10/27/24.
+//
+
 import Foundation
-import FirebaseFirestore
-import FirebaseAuth
+import SwiftUI
 
 class TransactionViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []
-    private let db = Firestore.firestore()
     
     init() {
+        // First try to load saved transactions
         loadTransactions()
+        
+        // If no saved transactions exist, add initial test data
+        if transactions.isEmpty {
+            transactions = [
+                Transaction(amount: 500, isIncome: false, date: Date(), category: "Rent"),
+                Transaction(amount: 300, isIncome: false, date: Date(), category: "Food"),
+                Transaction(amount: 150, isIncome: false, date: Date(), category: "Transportation"),
+                Transaction(amount: 200, isIncome: false, date: Date(), category: "Other")
+            ]
+            saveTransactions() // Save the initial data
+        }
     }
     
     func addTransaction(_ transaction: Transaction) {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        // Add to local array
         transactions.append(transaction)
-        
-        // Save to Firebase
-        db.collection("users")
-            .document(userId)
-            .collection("transactions")
-            .document(transaction.id)
-            .setData([
-                "id": transaction.id,
-                "amount": transaction.amount,
-                "isIncome": transaction.isIncome,
-                "date": transaction.date,
-                "category": transaction.category,
-                "note": transaction.note ?? ""
-            ]) { error in
-                if let error = error {
-                    print("Error saving transaction: \(error.localizedDescription)")
-                }
-            }
+        objectWillChange.send()
+        saveTransactions()
     }
     
-    func loadTransactions() {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        db.collection("users")
-            .document(userId)
-            .collection("transactions")
-            .getDocuments { [weak self] snapshot, error in
-                if let error = error {
-                    print("Error loading transactions: \(error.localizedDescription)")
-                    return
-                }
-                
-                guard let documents = snapshot?.documents else { return }
-                
-                self?.transactions = documents.compactMap { doc in
-                    let data = doc.data()
-                    return Transaction(
-                        id: data["id"] as? String ?? UUID().uuidString,
-                        amount: data["amount"] as? Double ?? 0.0,
-                        isIncome: data["isIncome"] as? Bool ?? false,
-                        date: (data["date"] as? Timestamp)?.dateValue() ?? Date(),
-                        category: data["category"] as? String ?? "Other",
-                        note: data["note"] as? String
-                    )
-                }
-            }
+    private func saveTransactions() {
+        if let encoded = try? JSONEncoder().encode(transactions) {
+            UserDefaults.standard.set(encoded, forKey: "SavedTransactions")
+        }
     }
     
-    // Keep your existing helper functions
+    private func loadTransactions() {
+        if let savedTransactions = UserDefaults.standard.data(forKey: "SavedTransactions"),
+           let decodedTransactions = try? JSONDecoder().decode([Transaction].self, from: savedTransactions) {
+            transactions = decodedTransactions
+        }
+    }
+    
     func getExpenses() -> [Transaction] {
         transactions.filter { !$0.isIncome }
     }
@@ -79,9 +62,22 @@ class TransactionViewModel: ObservableObject {
         transactions.filter { $0.isIncome }
     }
     
+    func getTransactions(forCategory category: String) -> [Transaction] {
+        transactions.filter { $0.category == category }
+    }
+    
     func getCategoryTotal(category: String) -> Double {
-        transactions
+        let total = transactions
             .filter { $0.category == category && !$0.isIncome }
             .reduce(0) { $0 + $1.amount }
+        print("Category \(category): \(total)") // Debug print
+        return total
+    }
+    
+    func removeTransaction(_ transaction: Transaction) {
+        if let index = transactions.firstIndex(where: { $0.id == transaction.id }) {
+            transactions.remove(at: index)
+            saveTransactions()
+        }
     }
 }
