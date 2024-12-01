@@ -16,36 +16,40 @@ class AuthManager: ObservableObject {
     
     // Simple email/password authentication
     func signInWithEmail(email: String, password: String) async throws {
-        isLoading = true
+        await MainActor.run {
+            isLoading = true
+        }
         
         // For demo purposes, accept any non-empty email/password
         if !email.isEmpty && !password.isEmpty {
-            DispatchQueue.main.async {
-                self.isAuthenticated = true
-                self.isLoading = false
+            await MainActor.run {
+                isAuthenticated = true
+                isLoading = false
             }
         } else {
-            DispatchQueue.main.async {
-                self.errorMessage = "Invalid email or password"
-                self.isLoading = false
+            await MainActor.run {
+                errorMessage = "Invalid email or password"
+                isLoading = false
             }
             throw AuthError.signInError("Invalid credentials")
         }
     }
     
     func signUpWithEmail(email: String, password: String) async throws {
-        isLoading = true
+        await MainActor.run {
+            isLoading = true
+        }
         
         // For demo purposes, accept any non-empty email/password
         if !email.isEmpty && !password.isEmpty {
-            DispatchQueue.main.async {
-                self.isAuthenticated = true
-                self.isLoading = false
+            await MainActor.run {
+                isAuthenticated = true
+                isLoading = false
             }
         } else {
-            DispatchQueue.main.async {
-                self.errorMessage = "Invalid email or password"
-                self.isLoading = false
+            await MainActor.run {
+                errorMessage = "Invalid email or password"
+                isLoading = false
             }
             throw AuthError.signInError("Invalid credentials")
         }
