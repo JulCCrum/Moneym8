@@ -1,8 +1,32 @@
 //
 //  TransactionsView.swift
 //  Moneym8
-//
 import SwiftUI
+
+extension String {
+    var color: Color {
+        switch self {
+        case "Rent": return .blue
+        case "Food": return .green
+        case "Transportation": return .orange
+        case "Other": return .purple
+        default: return .gray
+        }
+    }
+    
+    var emoji: String {
+        switch self {
+        case "Rent": return "🏠"
+        case "Food": return "🍽️"
+        case "Transportation": return "🚗"
+        case "Other": return "💡"
+        case "Salary": return "💰"
+        case "Investment": return "📈"
+        case "Gift": return "🎁"
+        default: return "💰"
+        }
+    }
+}
 
 struct TransactionsView: View {
     @Binding var isExpanded: Bool
@@ -62,6 +86,7 @@ struct TransactionsView: View {
                 .cornerRadius(10)
                 .foregroundColor(colorScheme == .dark ? .white : .black)
             }
+            .buttonStyle(PlainButtonStyle())
             .padding(.leading)
             .padding(.bottom, 20)
             
@@ -98,30 +123,20 @@ struct TransactionsView: View {
     }
 }
 
-// Add TransactionRow struct definition
 struct TransactionRow: View {
     let transaction: Transaction
     @ObservedObject var viewModel: TransactionViewModel
     @State private var showingDetail = false
     @Environment(\.colorScheme) var colorScheme
     
-    private let categoryColors = [
-        "Rent": (light: Color.blue.opacity(0.1), dark: Color(hex: "0039CB")),
-        "Food": (light: Color.green.opacity(0.1), dark: Color(hex: "2E7D32")),
-        "Transportation": (light: Color.orange.opacity(0.1), dark: Color(hex: "F57C00")),
-        "Other": (light: Color.purple.opacity(0.1), dark: Color(hex: "7B1FA2"))
-    ]
-    
     var body: some View {
         Button(action: { showingDetail = true }) {
             HStack {
                 ZStack {
                     Circle()
-                        .fill(colorScheme == .dark ?
-                              categoryColors[transaction.category]?.dark ?? Color.gray :
-                              categoryColors[transaction.category]?.light ?? Color.gray.opacity(0.1))
+                        .fill(transaction.category.color.opacity(colorScheme == .dark ? 1 : 0.1))
                         .frame(width: 40, height: 40)
-                    Text(categoryEmoji)
+                    Text(transaction.category.emoji)
                 }
                 
                 VStack(alignment: .leading) {
@@ -135,24 +150,15 @@ struct TransactionRow: View {
                 
                 Spacer()
                 
-                Text(formatAmount(transaction.amount, isIncome: transaction.isIncome))
+                Text(transaction.formattedAmount)
                     .font(.headline)
                     .foregroundColor(transaction.isIncome ? .green : .red)
             }
             .padding(.vertical, 4)
         }
+        .buttonStyle(PlainButtonStyle())
         .fullScreenCover(isPresented: $showingDetail) {
             TransactionDetailView(viewModel: viewModel, transaction: transaction)
-        }
-    }
-    
-    private var categoryEmoji: String {
-        switch transaction.category {
-        case "Rent": return "🏠"
-        case "Food": return "🍽️"
-        case "Transportation": return "🚗"
-        case "Other": return "💡"
-        default: return "💰"
         }
     }
     
@@ -161,17 +167,14 @@ struct TransactionRow: View {
         formatter.dateStyle = .medium
         return formatter.string(from: date)
     }
-    
-    private func formatAmount(_ amount: Double, isIncome: Bool) -> String {
-        let prefix = isIncome ? "+" : "-"
-        return "\(prefix)$\(String(format: "%.2f", amount))"
-    }
 }
 
 struct TransactionsView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionsView(isExpanded: .constant(false),
-                        isBlurred: .constant(false),
-                        viewModel: TransactionViewModel())
+        TransactionsView(
+            isExpanded: .constant(false),
+            isBlurred: .constant(false),
+            viewModel: TransactionViewModel()
+        )
     }
 }

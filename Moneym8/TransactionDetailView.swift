@@ -2,218 +2,107 @@
 //  TransactionDetailView.swift
 //  Moneym8
 //
-//  Created by chase Crummedyo on 11/5/24.
-//
+
 import SwiftUI
 
 struct TransactionDetailView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: TransactionViewModel
     let transaction: Transaction
-    @State private var showingDeleteAlert = false
-    @State private var isEditing = false
     
-    // Editing states
     @State private var amount: String = ""
     @State private var selectedCategory: String = ""
     @State private var date: Date = Date()
     @State private var note: String = ""
     @State private var isIncome: Bool = false
+    @State private var showingDeleteAlert = false
     
     let expenseCategories = ["Rent", "Food", "Transportation", "Other"]
     let incomeCategories = ["Salary", "Investment", "Gift", "Other"]
     
-    var categories: [String] {
-        isEditing ? (isIncome ? incomeCategories : expenseCategories) : []
-    }
-    
-    private var displayAmount: String {
-        if isEditing {
-            let amountValue = Double(amount) ?? 0
-            return isIncome ?
-                "+$\(String(format: "%.2f", amountValue))" :
-                "$\(String(format: "%.2f", amountValue))"
-        } else {
-            return transaction.formattedAmount
-        }
-    }
-    
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Header
-            HStack {
-                Text("Transaction Details")
-                    .font(.title)
-                    .fontWeight(.bold)
-                Spacer()
-                Button(action: { dismiss() }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.gray)
-                        .font(.title2)
-                }
-            }
-            .padding()
+        ZStack {
+            Color(.systemBackground).edgesIgnoringSafeArea(.all)
             
-            // Icon and Amount
-            VStack(spacing: 16) {
-                ZStack {
-                    Circle()
-                        .fill(categoryColor.opacity(0.2))
-                        .frame(width: 72, height: 72)
-                    if isEditing {
-                        Text("?")
-                            .font(.system(size: 32))
-                            .foregroundColor(.red)
-                    } else {
-                        Text(categoryEmoji)
+            VStack(spacing: 24) {
+                // Icon and Amount
+                VStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(selectedCategory.color)
+                            .frame(width: 72, height: 72)
+                        Text(selectedCategory.emoji)
                             .font(.system(size: 32))
                     }
-                }
-                
-                if isEditing {
-                    Text(displayAmount)
+                    
+                    TextField("Amount", text: $amount)
+                        .keyboardType(.decimalPad)
                         .font(.system(size: 34, weight: .bold))
                         .foregroundColor(isIncome ? .green : .red)
-                        .onTapGesture {
-                            // Add tap gesture if needed
-                        }
-                } else {
-                    Text(displayAmount)
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundColor(transaction.isIncome ? .green : .red)
+                        .multilineTextAlignment(.center)
                 }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 24)
-            
-            // Details
-            VStack(alignment: .leading, spacing: 32) {
-                // Type (Moved to top of details)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Type")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    if isEditing {
-                        Menu {
-                            Button(action: {
-                                isIncome = true
-                                selectedCategory = "Salary" // Default income category
-                            }) {
-                                Text("Income")
-                            }
-                            Button(action: {
-                                isIncome = false
-                                selectedCategory = "Food" // Default expense category
-                            }) {
-                                Text("Expense")
-                            }
-                        } label: {
-                            HStack {
-                                Text(isIncome ? "Income" : "Expense")
-                                    .font(.body)
-                                    .foregroundColor(.blue)
-                                Spacer()
-                                Image(systemName: "chevron.down")
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                    } else {
-                        Text(transaction.isIncome ? "Income" : "Expense")
-                            .font(.body)
-                    }
-                }
+                .padding(.vertical, 24)
                 
-                // Category
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Category")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    if isEditing {
-                        Menu {
-                            ForEach(categories, id: \.self) { category in
-                                Button(action: {
-                                    selectedCategory = category
-                                }) {
-                                    Text(category)
+                // Details Section
+                GroupBox(label: Text("DETAILS").foregroundColor(.gray)) {
+                    VStack(spacing: 16) {
+                        // Type Picker
+                        HStack {
+                            Text("Type")
+                            Spacer()
+                            Picker("Type", selection: $isIncome) {
+                                Text("Expense").tag(false)
+                                Text("Income").tag(true)
+                            }
+                            .pickerStyle(.menu)
+                        }
+                        .padding(.horizontal, 8)
+                        
+                        Divider()
+                        
+                        // Category Picker
+                        HStack {
+                            Text("Category")
+                            Spacer()
+                            Picker("Category", selection: $selectedCategory) {
+                                ForEach(isIncome ? incomeCategories : expenseCategories, id: \.self) { category in
+                                    Text(category).tag(category)
                                 }
                             }
-                        } label: {
-                            HStack {
-                                Text(selectedCategory)
-                                    .font(.body)
-                                    .foregroundColor(.blue)
-                                Spacer()
-                                Image(systemName: "chevron.down")
-                                    .foregroundColor(.gray)
-                            }
+                            .pickerStyle(.menu)
                         }
-                    } else {
-                        Text(transaction.category)
-                            .font(.body)
-                    }
-                }
-                
-                // Date
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Date")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    if isEditing {
-                        DatePicker("", selection: $date, displayedComponents: [.date])
-                            .labelsHidden()
-                    } else {
-                        Text(formatDate(transaction.date))
-                            .font(.body)
-                    }
-                }
-                
-                // Time
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Time")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    if isEditing {
-                        DatePicker("", selection: $date, displayedComponents: [.hourAndMinute])
-                            .labelsHidden()
-                    } else {
-                        Text(formatTime(transaction.date))
-                            .font(.body)
-                    }
-                }
-                
-                // Note
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Note")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    if isEditing {
+                        .padding(.horizontal, 8)
+                        
+                        Divider()
+                        
+                        // Date
+                        HStack {
+                            Text("Date")
+                            Spacer()
+                            DatePicker("", selection: $date, displayedComponents: [.date])
+                                .labelsHidden()
+                            DatePicker("", selection: $date, displayedComponents: [.hourAndMinute])
+                                .labelsHidden()
+                        }
+                        .padding(.horizontal, 8)
+                        
+                        Divider()
+                        
+                        // Note
                         TextField("Add a note", text: $note)
-                            .font(.body)
-                    } else if let transactionNote = transaction.note {
-                        Text(transactionNote)
-                            .font(.body)
-                    } else {
-                        Text("Add a note")
-                            .font(.body)
-                            .foregroundColor(.gray)
+                            .padding(.horizontal, 8)
                     }
                 }
-            }
-            .padding(.horizontal, 24)
-            
-            Spacer()
-            
-            // Bottom Buttons
-            VStack(spacing: 12) {
-                if isEditing {
-                    Button(action: {
-                        saveChanges()
-                        isEditing = false
-                    }) {
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                // Action Buttons
+                VStack(spacing: 12) {
+                    Button(action: { saveChanges() }) {
                         HStack {
                             Image(systemName: "checkmark")
                             Text("Save Transaction")
-                                .font(.headline)
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -221,37 +110,7 @@ struct TransactionDetailView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                     }
-                    
-                    Button(action: {
-                        isEditing = false
-                        resetToOriginalValues()
-                    }) {
-                        HStack {
-                            Image(systemName: "xmark")
-                            Text("Cancel")
-                                .font(.headline)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red.opacity(0.1))
-                        .foregroundColor(.red)
-                        .cornerRadius(10)
-                    }
-                } else {
-                    Button(action: {
-                        isEditing = true
-                        resetToOriginalValues()
-                    }) {
-                        HStack {
-                            Image(systemName: "pencil")
-                            Text("Edit Transaction")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.black)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
+                    .buttonStyle(PlainButtonStyle())
                     
                     Button(action: { showingDeleteAlert = true }) {
                         HStack {
@@ -264,84 +123,49 @@ struct TransactionDetailView: View {
                         .foregroundColor(.red)
                         .cornerRadius(10)
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
+                .padding(.horizontal)
+                .padding(.bottom, 24)
             }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 24)
         }
-        .background(Color(uiColor: .systemGray6))
+        .navigationTitle("Transaction Details")
+        .navigationBarItems(trailing: Button(action: { dismiss() }) {
+            Image(systemName: "xmark.circle.fill")
+                .foregroundColor(.gray)
+        })
+        .onAppear {
+            amount = String(format: "%.2f", transaction.amount)
+            selectedCategory = transaction.category
+            date = transaction.date
+            note = transaction.note ?? ""
+            isIncome = transaction.isIncome
+        }
         .alert("Delete Transaction", isPresented: $showingDeleteAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
-                if let index = viewModel.transactions.firstIndex(where: { $0.id == transaction.id }) {
-                    viewModel.transactions.remove(at: index)
-                    dismiss()
-                }
+                viewModel.removeTransaction(transaction)
+                dismiss()
             }
         } message: {
             Text("Are you sure you want to delete this transaction? This action cannot be undone.")
         }
     }
     
-    private func resetToOriginalValues() {
-        amount = String(format: "%.2f", transaction.amount)
-        selectedCategory = transaction.category
-        date = transaction.date
-        note = transaction.note ?? ""
-        isIncome = transaction.isIncome
-    }
-    
     private func saveChanges() {
-        guard let newAmount = Double(amount) else { return }
+        guard let amountValue = Double(amount) else { return }
         
         let updatedTransaction = Transaction(
             id: transaction.id,
-            amount: newAmount,
+            amount: amountValue,
             isIncome: isIncome,
             date: date,
             category: selectedCategory,
             note: note.isEmpty ? nil : note
         )
         
-        if let index = viewModel.transactions.firstIndex(where: { $0.id == transaction.id }) {
-            viewModel.transactions[index] = updatedTransaction
-        }
-    }
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        return formatter.string(from: date)
-    }
-    
-    private func formatTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
-    }
-    
-    private var categoryColor: Color {
-        let category = isEditing ? selectedCategory : transaction.category
-        switch category {
-        case "Rent": return .blue
-        case "Food": return .green
-        case "Transportation": return .orange
-        case "Other": return .purple
-        default: return .gray
-        }
-    }
-    
-    private var categoryEmoji: String {
-        let category = isEditing ? selectedCategory : transaction.category
-        switch category {
-        case "Rent": return "🏠"
-        case "Food": return "🍽️"
-        case "Transportation": return "🚗"
-        case "Other": return "💡"
-        case "Salary": return "💰"
-        case "Investment": return "📈"
-        case "Gift": return "🎁"
-        default: return "💰"
-        }
+        viewModel.removeTransaction(transaction)
+        viewModel.addTransaction(updatedTransaction)
+        dismiss()
     }
 }

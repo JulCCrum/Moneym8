@@ -34,13 +34,14 @@ struct FloatingActionButtons: View {
                                     .background(colorScheme == .dark ? Color(hex: "404040") : .black)
                                     .foregroundColor(.white)
                                     .clipShape(Circle())
-                                    .shadow(color: .black.opacity(0.15), radius: 5, x: 0, y: 2)
                             }
+                            .buttonStyle(PlainButtonStyle()) // Add this line
                             .offset(x: isExpanded ? CGFloat(cos(Double(index) * .pi / 4 + .pi)) * 80 : 0,
                                     y: isExpanded ? CGFloat(sin(Double(index) * .pi / 4 + .pi)) * 80 : 0)
                             .opacity(isExpanded ? 1 : 0)
                             .animation(.spring(response: 0.5, dampingFraction: 0.6).delay(Double(index) * 0.05), value: isExpanded)
                         }
+                        
                         Button {
                             toggleExpanded()
                         } label: {
@@ -50,8 +51,8 @@ struct FloatingActionButtons: View {
                                 .background(Color.green)
                                 .foregroundColor(.white)
                                 .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 4)
                         }
+                        .buttonStyle(PlainButtonStyle()) // Add this line
                     }
                     .offset(x: -geometry.size.width / 10, y: -15)
                     .padding(.bottom, 60)

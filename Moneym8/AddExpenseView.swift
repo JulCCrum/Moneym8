@@ -1,7 +1,12 @@
+//
+//  AddExpenseView.swift
+//  Moneym8
+//
+
 import SwiftUI
 
 struct AddExpenseView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: TransactionViewModel
     @State private var amount: String = ""
     @State private var selectedCategory: String = "Food"
@@ -12,10 +17,11 @@ struct AddExpenseView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 0) {
-                // Form Content
-                VStack(alignment: .leading, spacing: 32) {
-                    // Amount Section
+            ZStack {
+                Color(.systemBackground).edgesIgnoringSafeArea(.all)
+                
+                VStack(alignment: .leading, spacing: 24) {
+                    // AMOUNT
                     VStack(alignment: .leading, spacing: 8) {
                         Text("AMOUNT")
                             .foregroundColor(.gray)
@@ -25,105 +31,106 @@ struct AddExpenseView: View {
                                 .foregroundColor(.gray)
                             TextField("0", text: $amount)
                                 .keyboardType(.decimalPad)
+                                .foregroundColor(.primary) // This ensures proper contrast in both modes
                         }
-                        .font(.system(size: 17))
+                        .font(.system(size: 24))
                     }
                     
-                    // Category Section
+                    // CATEGORY
                     VStack(alignment: .leading, spacing: 8) {
                         Text("CATEGORY")
                             .foregroundColor(.gray)
                             .font(.system(size: 14))
                         Menu {
                             ForEach(categories, id: \.self) { category in
-                                Button(action: {
-                                    selectedCategory = category
-                                }) {
+                                Button(action: { selectedCategory = category }) {
                                     Text(category)
                                 }
                             }
                         } label: {
                             HStack {
                                 Text(selectedCategory)
-                                    .foregroundColor(.black)
                                 Spacer()
                                 Image(systemName: "chevron.down")
                                     .foregroundColor(.gray)
                             }
-                            .font(.system(size: 17))
+                            .padding()
+                            .background(Color(.tertiarySystemBackground))
+                            .cornerRadius(10)
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     
-                    // Date Section
+                    // DATE
                     VStack(alignment: .leading, spacing: 8) {
                         Text("DATE")
                             .foregroundColor(.gray)
                             .font(.system(size: 14))
-                        DatePicker("", selection: $date, displayedComponents: [.date, .hourAndMinute])
-                            .datePickerStyle(CompactDatePickerStyle())
-                            .labelsHidden()
-                            .font(.system(size: 17))
+                        HStack {
+                            DatePicker("", selection: $date, displayedComponents: [.date])
+                                .labelsHidden()
+                            DatePicker("", selection: $date, displayedComponents: [.hourAndMinute])
+                                .labelsHidden()
+                        }
+                        .padding(8)
+                        .background(Color(.tertiarySystemBackground))
+                        .cornerRadius(10)
                     }
                     
-                    // Note Section
+                    // NOTE
                     VStack(alignment: .leading, spacing: 8) {
                         Text("NOTE (OPTIONAL)")
                             .foregroundColor(.gray)
                             .font(.system(size: 14))
                         TextField("Add a note", text: $note)
-                            .font(.system(size: 17))
-                    }
-                }
-                .padding(24)
-                
-                Spacer()
-                
-                // Bottom Buttons
-                VStack(spacing: 12) {
-                    Button(action: {
-                        saveExpense()
-                    }) {
-                        HStack {
-                            Image(systemName: "checkmark")
-                            Text("Save Transaction")
-                                .font(.headline)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                            .padding()
+                            .background(Color(.tertiarySystemBackground))
+                            .cornerRadius(10)
+                            .foregroundColor(.primary)
                     }
                     
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: "xmark")
-                            Text("Cancel")
-                                .font(.headline)
+                    Spacer()
+                    
+                    // Buttons
+                    VStack(spacing: 12) {
+                        Button(action: { saveExpense() }) {
+                            HStack {
+                                Image(systemName: "checkmark")
+                                Text("Save Transaction")
+                                    .font(.headline)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red.opacity(0.1))
-                        .foregroundColor(.red)
-                        .cornerRadius(10)
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Button(action: { dismiss() }) {
+                            HStack {
+                                Image(systemName: "xmark")
+                                Text("Cancel")
+                                    .font(.headline)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.red.opacity(0.1))
+                            .foregroundColor(.red)
+                            .cornerRadius(10)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 24)
+                .padding()
             }
             .navigationTitle("Add Expense")
             .navigationBarTitleDisplayMode(.large)
-            // Remove the navigation bar buttons since we now have the bottom buttons
-            .navigationBarItems(leading: EmptyView(), trailing: EmptyView())
         }
     }
     
     private func saveExpense() {
-        guard let amountValue = Double(amount), amountValue > 0 else {
-            return
-        }
+        guard let amountValue = Double(amount), amountValue > 0 else { return }
         
         let transaction = Transaction(
             amount: amountValue,
@@ -134,10 +141,6 @@ struct AddExpenseView: View {
         )
         
         viewModel.addTransaction(transaction)
-        presentationMode.wrappedValue.dismiss()
+        dismiss()
     }
-}
-
-#Preview {
-    AddExpenseView(viewModel: TransactionViewModel())
 }

@@ -2,14 +2,7 @@
 //  HomeView.swift
 //  Moneym8
 //
-//
-//  HomeView.swift
-//  Moneym8
-//
-//
-//  HomeView.swift
-//  Moneym8
-//
+
 import SwiftUI
 import Charts
 
@@ -26,17 +19,15 @@ struct HomeView: View {
     @State private var selectedTimePeriod: String = "1M"
     @Environment(\.colorScheme) var colorScheme
 
-    // Define category colors
     private let categoryColors = [
-        "Rent": (light: Color.blue.opacity(0.1), dark: Color(hex: "0039CB")), // Bright blue
-        "Food": (light: Color.green.opacity(0.1), dark: Color(hex: "2E7D32")), // Bright green
-        "Transportation": (light: Color.orange.opacity(0.1), dark: Color(hex: "F57C00")), // Bright orange
-        "Other": (light: Color.purple.opacity(0.1), dark: Color(hex: "7B1FA2")) // Bright purple
+        "Rent": (light: Color.blue.opacity(0.1), dark: Color(hex: "0039CB")),
+        "Food": (light: Color.green.opacity(0.1), dark: Color(hex: "2E7D32")),
+        "Transportation": (light: Color.orange.opacity(0.1), dark: Color(hex: "F57C00")),
+        "Other": (light: Color.purple.opacity(0.1), dark: Color(hex: "7B1FA2"))
     ]
 
     var body: some View {
         VStack(alignment: .leading) {
-            // Title Section
             Text("Home")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -44,7 +35,6 @@ struct HomeView: View {
                 .padding(.leading)
                 .padding(.bottom, 15)
             
-            // Dropdown Button for Chart Type Selection
             Menu {
                 Picker("Select Chart Type", selection: $selectedChart) {
                     ForEach(ChartType.allCases, id: \.self) { chart in
@@ -62,9 +52,9 @@ struct HomeView: View {
                 .cornerRadius(10)
                 .foregroundColor(colorScheme == .dark ? .white : .black)
             }
+            .buttonStyle(PlainButtonStyle())
             .padding(.leading)
 
-            // Chart Section - Centered
             HStack {
                 Spacer()
                 switch selectedChart {
@@ -88,7 +78,6 @@ struct HomeView: View {
                 Spacer()
             }
 
-            // Time Period Selection - Centered
             HStack(spacing: 30) {
                 ForEach(["1D", "1W", "1M", "1Y"], id: \.self) { period in
                     Button(action: {
@@ -104,85 +93,55 @@ struct HomeView: View {
                             .foregroundColor(colorScheme == .dark ? .white : .black)
                             .clipShape(Circle())
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
-            .multilineTextAlignment(.center)
 
-            // Summary Section Below the Chart
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Categories Summary")
-                    .font(.headline)
-                    .padding(.leading)
+            Text("Categories Summary")
+                .font(.headline)
+                .padding(.leading)
+                .padding(.top, 20)
 
-                HStack {
-                    VStack {
-                        Text("Rent")
-                            .font(.subheadline)
-                            .foregroundColor(colorScheme == .dark ? .white : .gray)
-                        Text("$\(Int(viewModel.getCategoryTotal(category: "Rent")))")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(colorScheme == .dark ? categoryColors["Rent"]!.dark : categoryColors["Rent"]!.light)
-                    .cornerRadius(10)
-
-                    VStack {
-                        Text("Food")
-                            .font(.subheadline)
-                            .foregroundColor(colorScheme == .dark ? .white : .gray)
-                        Text("$\(Int(viewModel.getCategoryTotal(category: "Food")))")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(colorScheme == .dark ? categoryColors["Food"]!.dark : categoryColors["Food"]!.light)
-                    .cornerRadius(10)
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
+                ForEach(["Rent", "Food", "Transportation", "Other"], id: \.self) { category in
+                    let total = viewModel.getCategoryTotal(category: category)
+                    CategorySummaryBox(
+                        category: category,
+                        amount: total,
+                        color: colorScheme == .dark ?
+                            categoryColors[category]?.dark ?? .gray :
+                            categoryColors[category]?.light ?? .gray.opacity(0.1)
+                    )
                 }
-                .padding(.horizontal)
-
-                HStack {
-                    VStack {
-                        Text("Transportation")
-                            .font(.subheadline)
-                            .foregroundColor(colorScheme == .dark ? .white : .gray)
-                        Text("$\(Int(viewModel.getCategoryTotal(category: "Transportation")))")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(colorScheme == .dark ? categoryColors["Transportation"]!.dark : categoryColors["Transportation"]!.light)
-                    .cornerRadius(10)
-
-                    VStack {
-                        Text("Other")
-                            .font(.subheadline)
-                            .foregroundColor(colorScheme == .dark ? .white : .gray)
-                        Text("$\(Int(viewModel.getCategoryTotal(category: "Other")))")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(colorScheme == .dark ? categoryColors["Other"]!.dark : categoryColors["Other"]!.light)
-                    .cornerRadius(10)
-                }
-                .padding(.horizontal)
             }
-            .padding(.top, 20)
+            .padding()
 
             Spacer()
         }
-        .padding(.bottom, 20)
+    }
+}
+
+struct CategorySummaryBox: View {
+    let category: String
+    let amount: Double
+    let color: Color
+
+    var body: some View {
+        VStack {
+            Text(category)
+                .font(.subheadline)
+                .foregroundColor(.white)
+            Text("$\(Int(amount))")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(color)
+        .cornerRadius(10)
     }
 }
 

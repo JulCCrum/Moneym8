@@ -49,18 +49,20 @@ struct AuthenticationView: View {
                 }
             }) {
                 Text(isSignUp ? "Create Account" : "Sign In")
-                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.appGreen)
+                    .foregroundColor(.white)
                     .cornerRadius(10)
             }
+            .buttonStyle(PlainButtonStyle())
             
             // Toggle between Sign In and Sign Up
             Button(action: { isSignUp.toggle() }) {
                 Text(isSignUp ? "Already have an account? Sign In" : "Don't have an account? Create one")
                     .foregroundColor(.appGreen)
             }
+            .buttonStyle(PlainButtonStyle())
         }
         .padding()
         .alert("Error", isPresented: $showError) {
