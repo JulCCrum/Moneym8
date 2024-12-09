@@ -3,18 +3,17 @@
 //  Moneym8
 //
 //  Created by chase Crummedyo on 10/27/24.
-
 import Foundation
+import FirebaseFirestore
 
 struct Transaction: Identifiable, Codable {
-    let id: String
+    @DocumentID var id: String?
     let amount: Double
     let isIncome: Bool
     let date: Date
     let category: String
     var note: String?
     
-    // Add computed property for formatting
     var formattedAmount: String {
         let prefix = isIncome ? "+" : "-"
         return "\(prefix)$\(String(format: "%.2f", amount))"

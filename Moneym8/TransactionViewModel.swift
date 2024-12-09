@@ -3,54 +3,55 @@
 //  Moneym8
 //
 //  Created by chase Crummedyo on 10/27/24.
-//
-//
-//
-//
-//  TransactionViewModel.swift
-//  Moneym8
-//
-//  Created by chase Crummedyo on 10/27/24.
-//
-
-import Foundation
 import SwiftUI
+import FirebaseFirestore
+import FirebaseAuth
 
 class TransactionViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []
+    private var db = Firestore.firestore()
     
     init() {
-        // First try to load saved transactions
-        loadTransactions()
+        listenToTransactions()
+    }
+    
+    private func listenToTransactions() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        // If no saved transactions exist, add initial test data
-        if transactions.isEmpty {
-            transactions = [
-                Transaction(amount: 500, isIncome: false, date: Date(), category: "Rent"),
-                Transaction(amount: 300, isIncome: false, date: Date(), category: "Food"),
-                Transaction(amount: 150, isIncome: false, date: Date(), category: "Transportation"),
-                Transaction(amount: 200, isIncome: false, date: Date(), category: "Other")
-            ]
-            saveTransactions() // Save the initial data
-        }
+        db.collection("users").document(userId).collection("transactions")
+            .order(by: "date", descending: true)
+            .addSnapshotListener { querySnapshot, error in
+                guard let documents = querySnapshot?.documents else {
+                    print("Error fetching documents: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                self.transactions = documents.compactMap { document in
+                    try? document.data(as: Transaction.self)
+                }
+            }
     }
     
     func addTransaction(_ transaction: Transaction) {
-        transactions.append(transaction)
-        objectWillChange.send()
-        saveTransactions()
-    }
-    
-    private func saveTransactions() {
-        if let encoded = try? JSONEncoder().encode(transactions) {
-            UserDefaults.standard.set(encoded, forKey: "SavedTransactions")
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        do {
+            _ = try db.collection("users").document(userId)
+                .collection("transactions")
+                .addDocument(from: transaction)
+        } catch {
+            print("Error adding transaction: \(error)")
         }
     }
     
-    private func loadTransactions() {
-        if let savedTransactions = UserDefaults.standard.data(forKey: "SavedTransactions"),
-           let decodedTransactions = try? JSONDecoder().decode([Transaction].self, from: savedTransactions) {
-            transactions = decodedTransactions
+    func removeTransaction(_ transaction: Transaction) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        if let transactionId = transaction.id {
+            db.collection("users").document(userId)
+                .collection("transactions")
+                .document(transactionId)
+                .delete()
         }
     }
     
@@ -70,14 +71,7 @@ class TransactionViewModel: ObservableObject {
         let total = transactions
             .filter { $0.category == category && !$0.isIncome }
             .reduce(0) { $0 + $1.amount }
-        print("Category \(category): \(total)") // Debug print
+        print("Category \(category): \(total)")
         return total
-    }
-    
-    func removeTransaction(_ transaction: Transaction) {
-        if let index = transactions.firstIndex(where: { $0.id == transaction.id }) {
-            transactions.remove(at: index)
-            saveTransactions()
-        }
     }
 }

@@ -4,8 +4,8 @@
 //
 //  Created by chase Crummedyo on 11/23/24.
 //
-
 import SwiftUI
+import FirebaseAuth  // Make sure this import is at the top
 
 class AuthManager: ObservableObject {
     @Published var isAuthenticated = false
@@ -14,24 +14,24 @@ class AuthManager: ObservableObject {
     
     static let shared = AuthManager()
     
-    // Simple email/password authentication
     func signInWithEmail(email: String, password: String) async throws {
         await MainActor.run {
             isLoading = true
         }
         
-        // For demo purposes, accept any non-empty email/password
-        if !email.isEmpty && !password.isEmpty {
+        do {
+            // Remove 'let result =' since we're not using it
+            try await Auth.auth().signIn(withEmail: email, password: password)
             await MainActor.run {
                 isAuthenticated = true
                 isLoading = false
             }
-        } else {
+        } catch {
             await MainActor.run {
-                errorMessage = "Invalid email or password"
+                errorMessage = error.localizedDescription
                 isLoading = false
             }
-            throw AuthError.signInError("Invalid credentials")
+            throw error
         }
     }
     
@@ -40,33 +40,28 @@ class AuthManager: ObservableObject {
             isLoading = true
         }
         
-        // For demo purposes, accept any non-empty email/password
-        if !email.isEmpty && !password.isEmpty {
+        do {
+            // Remove 'let result =' since we're not using it
+            try await Auth.auth().createUser(withEmail: email, password: password)
             await MainActor.run {
                 isAuthenticated = true
                 isLoading = false
             }
-        } else {
+        } catch {
             await MainActor.run {
-                errorMessage = "Invalid email or password"
+                errorMessage = error.localizedDescription
                 isLoading = false
             }
-            throw AuthError.signInError("Invalid credentials")
+            throw error
         }
     }
     
     func signOut() {
-        isAuthenticated = false
-    }
-}
-
-enum AuthError: LocalizedError {
-    case signInError(String)
-    
-    var errorDescription: String? {
-        switch self {
-        case .signInError(let message):
-            return message
+        do {
+            try Auth.auth().signOut()
+            isAuthenticated = false
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }

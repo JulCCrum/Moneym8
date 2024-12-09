@@ -2,8 +2,10 @@
 //  TransactionDetailView.swift
 //  Moneym8
 //
+import SwiftUI
 
 import SwiftUI
+import FirebaseFirestore
 
 struct TransactionDetailView: View {
     @Environment(\.dismiss) var dismiss
@@ -176,7 +178,7 @@ struct TransactionDetailView: View {
         guard let amountValue = Double(amount) else { return }
         
         let updatedTransaction = Transaction(
-            id: transaction.id,
+            id: transaction.id ?? UUID().uuidString,
             amount: amountValue,
             isIncome: isIncome,
             date: date,
