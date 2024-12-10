@@ -5,11 +5,6 @@
 //  Created by chase Crummedyo on 11/9/24.
 //
 //
-//  Colors.swift
-//  Moneym8
-//
-//  Created by chase Crummedyo on 11/9/24.
-//
 import SwiftUI
 
 extension Color {
@@ -49,22 +44,22 @@ extension Color {
     
     // Category Summary Box Colors - Dark Mode
     static let rentBox = Color(
-        light: Color.blue.opacity(0.1),
+        light: Color.blue.opacity(0.3),
         dark: Color.blue.opacity(0.3)
     )
     
     static let foodBox = Color(
-        light: Color.green.opacity(0.1),
+        light: Color.green.opacity(0.3),
         dark: Color.green.opacity(0.3)
     )
     
     static let transportationBox = Color(
-        light: Color.orange.opacity(0.1),
+        light: Color.orange.opacity(0.3),
         dark: Color.orange.opacity(0.3)
     )
     
     static let otherBox = Color(
-        light: Color.purple.opacity(0.1),
+        light: Color.purple.opacity(0.3),
         dark: Color.purple.opacity(0.3)
     )
     

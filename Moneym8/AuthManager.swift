@@ -5,7 +5,7 @@
 //  Created by chase Crummedyo on 11/23/24.
 //
 import SwiftUI
-import FirebaseAuth  // Make sure this import is at the top
+import FirebaseAuth
 
 class AuthManager: ObservableObject {
     @Published var isAuthenticated = false
@@ -13,6 +13,21 @@ class AuthManager: ObservableObject {
     @Published var isLoading = false
     
     static let shared = AuthManager()
+    private var authStateHandle: AuthStateDidChangeListenerHandle?
+    
+    init() {
+        // Add this to check for existing auth state
+        if Auth.auth().currentUser != nil {
+            isAuthenticated = true
+        }
+        
+        // Add auth state listener and store the handle
+        authStateHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            DispatchQueue.main.async {
+                self?.isAuthenticated = user != nil
+            }
+        }
+    }
     
     func signInWithEmail(email: String, password: String) async throws {
         await MainActor.run {
@@ -20,7 +35,6 @@ class AuthManager: ObservableObject {
         }
         
         do {
-            // Remove 'let result =' since we're not using it
             try await Auth.auth().signIn(withEmail: email, password: password)
             await MainActor.run {
                 isAuthenticated = true
@@ -41,7 +55,6 @@ class AuthManager: ObservableObject {
         }
         
         do {
-            // Remove 'let result =' since we're not using it
             try await Auth.auth().createUser(withEmail: email, password: password)
             await MainActor.run {
                 isAuthenticated = true
@@ -62,6 +75,13 @@ class AuthManager: ObservableObject {
             isAuthenticated = false
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+    
+    deinit {
+        // Remove the listener when the AuthManager is deallocated
+        if let handle = authStateHandle {
+            Auth.auth().removeStateDidChangeListener(handle)
         }
     }
 }

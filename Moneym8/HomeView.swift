@@ -20,10 +20,10 @@ struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
 
     private let categoryColors = [
-        "Rent": (light: Color.blue.opacity(0.1), dark: Color(hex: "0039CB")),
-        "Food": (light: Color.green.opacity(0.1), dark: Color(hex: "2E7D32")),
-        "Transportation": (light: Color.orange.opacity(0.1), dark: Color(hex: "F57C00")),
-        "Other": (light: Color.purple.opacity(0.1), dark: Color(hex: "7B1FA2"))
+        "Rent": (light: Color.blue.opacity(0.9), dark: Color(hex: "0039CB")),
+        "Food": (light: Color.green.opacity(0.9), dark: Color(hex: "2E7D32")),
+        "Transportation": (light: Color.orange.opacity(0.9), dark: Color(hex: "F57C00")),
+        "Other": (light: Color.purple.opacity(0.9), dark: Color(hex: "7B1FA2"))
     ]
 
     var body: some View {
