@@ -4,9 +4,9 @@
 //
 //  Created by chase Crummedyo on 10/11/24.
 //
-//
 
 import SwiftUI
+import FirebaseFirestore
 
 struct ContentView: View {
     @StateObject private var transactionViewModel = TransactionViewModel()
@@ -17,6 +17,8 @@ struct ContentView: View {
     @State private var showAddIncome = false
     @State private var showHelp = false
     @AppStorage("isDarkMode") private var isDarkMode = false
+    // Add this binding
+    @Binding var showAddTransaction: Bool
     
     var body: some View {
         NavigationView {
@@ -83,6 +85,13 @@ struct ContentView: View {
                 HelpView()
             }
         }
+        // Add this modifier to handle the shortcut trigger
+        .onChange(of: showAddTransaction) { oldValue, newValue in
+            if newValue {
+                showAddExpense = true
+                showAddTransaction = false  // Reset after triggering
+            }
+        }
     }
     
     private func handleButtonTap(_ index: Int) {
@@ -99,6 +108,7 @@ struct ContentView: View {
     }
 }
 
+// Update the preview provider
 #Preview {
-    ContentView()
+    ContentView(showAddTransaction: .constant(false))
 }

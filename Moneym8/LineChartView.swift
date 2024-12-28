@@ -12,36 +12,87 @@ struct LineChartView: View {
     let timeframe: String
     
     private var data: [(String, Double)] {
+        let transactions = viewModel.transactions.sorted { $0.date < $1.date }
+        let calendar = Calendar.current
+        
         switch timeframe {
         case "1D":
-            return [
-                ("9AM", 500),
-                ("12PM", 700),
-                ("3PM", 600),
-                ("6PM", 800)
-            ]
+            // Group by hour for today
+            let todayStart = calendar.startOfDay(for: Date())
+            let filteredTransactions = transactions.filter {
+                calendar.isDate($0.date, inSameDayAs: Date())
+            }
+            var hourlyTotals: [(String, Double)] = []
+            for hour in 0...23 {
+                if let date = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: todayStart) {
+                    let total = filteredTransactions
+                        .filter { calendar.component(.hour, from: $0.date) == hour }
+                        .reduce(0) { $0 + ($1.isIncome ? $1.amount : -$1.amount) }
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "ha"
+                    hourlyTotals.append((formatter.string(from: date), total))
+                }
+            }
+            return hourlyTotals
+            
         case "1W":
-            return [
-                ("Mon", 500),
-                ("Wed", 600),
-                ("Fri", 750),
-                ("Sun", 800)
-            ]
+            // Group by day for the week
+            let weekAgo = calendar.date(byAdding: .day, value: -7, to: Date())!
+            let filteredTransactions = transactions.filter { $0.date >= weekAgo }
+            var dailyTotals: [(String, Double)] = []
+            for dayOffset in 0...6 {
+                if let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) {
+                    let total = filteredTransactions
+                        .filter { calendar.isDate($0.date, inSameDayAs: date) }
+                        .reduce(0) { $0 + ($1.isIncome ? $1.amount : -$1.amount) }
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "EEE"
+                    dailyTotals.append((formatter.string(from: date), total))
+                }
+            }
+            return dailyTotals.reversed()
+            
+        case "1M":
+            // Group by week for the month
+            let monthAgo = calendar.date(byAdding: .month, value: -1, to: Date())!
+            let filteredTransactions = transactions.filter { $0.date >= monthAgo }
+            var weeklyTotals: [(String, Double)] = []
+            var weekOffset = 0
+            while let weekStart = calendar.date(byAdding: .weekOfYear, value: -weekOffset, to: Date()),
+                  weekStart >= monthAgo {
+                let weekTotal = filteredTransactions
+                    .filter {
+                        let weekOfTransaction = calendar.component(.weekOfYear, from: $0.date)
+                        let weekOfStart = calendar.component(.weekOfYear, from: weekStart)
+                        return weekOfTransaction == weekOfStart
+                    }
+                    .reduce(0) { $0 + ($1.isIncome ? $1.amount : -$1.amount) }
+                weeklyTotals.append(("Week \(weekOffset + 1)", weekTotal))
+                weekOffset += 1
+            }
+            return weeklyTotals.reversed()
+            
         case "1Y":
-            return [
-                ("Jan", 500),
-                ("Mar", 600),
-                ("Jun", 800),
-                ("Sep", 900),
-                ("Dec", 1200)
-            ]
-        default: // 1M
-            return [
-                ("Week 1", 500),
-                ("Week 2", 600),
-                ("Week 3", 700),
-                ("Week 4", 800)
-            ]
+            // Group by month for the year
+            let yearAgo = calendar.date(byAdding: .year, value: -1, to: Date())!
+            let filteredTransactions = transactions.filter { $0.date >= yearAgo }
+            var monthlyTotals: [(String, Double)] = []
+            for monthOffset in 0...11 {
+                if let date = calendar.date(byAdding: .month, value: -monthOffset, to: Date()) {
+                    let total = filteredTransactions
+                        .filter {
+                            calendar.isDate($0.date, inSameMonth: date)
+                        }
+                        .reduce(0) { $0 + ($1.isIncome ? $1.amount : -$1.amount) }
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "MMM"
+                    monthlyTotals.append((formatter.string(from: date), total))
+                }
+            }
+            return monthlyTotals.reversed()
+            
+        default:
+            return []
         }
     }
     
@@ -86,5 +137,13 @@ struct LineChartView: View {
         .chartYAxis(.hidden)
         .frame(maxWidth: .infinity)
         .frame(height: 200)
+    }
+}
+
+extension Calendar {
+    func isDate(_ date1: Date, inSameMonth date2: Date) -> Bool {
+        let components1 = dateComponents([.year, .month], from: date1)
+        let components2 = dateComponents([.year, .month], from: date2)
+        return components1.year == components2.year && components1.month == components2.month
     }
 }

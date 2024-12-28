@@ -32,6 +32,9 @@
 		CAA348A02D066107004BAE1F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = CAA3489F2D066107004BAE1F /* FirebaseStorage */; };
 		CAA348A22D066107004BAE1F /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = CAA348A12D066107004BAE1F /* FirebaseStorageCombine-Community */; };
 		CAA348A42D066107004BAE1F /* FirebaseVertexAI in Frameworks */ = {isa = PBXBuildFile; productRef = CAA348A32D066107004BAE1F /* FirebaseVertexAI */; };
+		CAE3CAFC2D111D2D00F3A8FF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA1735052D0F3CAB0020CBDB /* WidgetKit.framework */; };
+		CAE3CAFD2D111D2D00F3A8FF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA1735072D0F3CAC0020CBDB /* SwiftUI.framework */; };
+		CAE3CB0E2D111D2F00F3A8FF /* Money widgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CAE3CAFB2D111D2C00F3A8FF /* Money widgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,18 +52,64 @@
 			remoteGlobalIDString = CA41D9A02CB98313000DCD06;
 			remoteInfo = Moneym8;
 		};
+		CAE3CB0C2D111D2F00F3A8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CA41D9992CB98313000DCD06 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CAE3CAFA2D111D2C00F3A8FF;
+			remoteInfo = "Money widgetExtension";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CA17351E2D0F3CAE0020CBDB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CAE3CB0E2D111D2F00F3A8FF /* Money widgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		CA054C5E2CF1ACDB00AA8384 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		CA1735052D0F3CAB0020CBDB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		CA1735072D0F3CAC0020CBDB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		CA17351F2D0F3D410020CBDB /* AppIntents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppIntents.framework; path = System/Library/Frameworks/AppIntents.framework; sourceTree = SDKROOT; };
 		CA41D9A12CB98313000DCD06 /* Moneym8.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneym8.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA41D9B32CB98316000DCD06 /* Moneym8Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Moneym8Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Moneym8UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAE3CAFB2D111D2C00F3A8FF /* Money widgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Money widgetExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAE3CB222D1A414400F3A8FF /* Money widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Money widgetExtension.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CAE3CB122D111D2F00F3A8FF /* Exceptions for "Money widget" folder in "Money widgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CAE3CAFA2D111D2C00F3A8FF /* Money widgetExtension */;
+		};
+		CAE3CB202D1880E700F3A8FF /* Exceptions for "Moneym8" folder in "Moneym8" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CA41D9A02CB98313000DCD06 /* Moneym8 */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CA41D9A32CB98313000DCD06 /* Moneym8 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CAE3CB202D1880E700F3A8FF /* Exceptions for "Moneym8" folder in "Moneym8" target */,
+			);
 			path = Moneym8;
 			sourceTree = "<group>";
 		};
@@ -72,6 +121,14 @@
 		CA41D9C02CB98317000DCD06 /* Moneym8UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Moneym8UITests;
+			sourceTree = "<group>";
+		};
+		CAE3CAFE2D111D2D00F3A8FF /* Money widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CAE3CB122D111D2F00F3A8FF /* Exceptions for "Money widget" folder in "Money widgetExtension" target */,
+			);
+			path = "Money widget";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -122,12 +179,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CAE3CAF82D111D2C00F3A8FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CAE3CAFD2D111D2D00F3A8FF /* SwiftUI.framework in Frameworks */,
+				CAE3CAFC2D111D2D00F3A8FF /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		CA2054BD2CF8EA1B001B714E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CA17351F2D0F3D410020CBDB /* AppIntents.framework */,
+				CA1735052D0F3CAB0020CBDB /* WidgetKit.framework */,
+				CA1735072D0F3CAC0020CBDB /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -135,10 +204,12 @@
 		CA41D9982CB98313000DCD06 = {
 			isa = PBXGroup;
 			children = (
+				CAE3CB222D1A414400F3A8FF /* Money widgetExtension.entitlements */,
 				CA054C5E2CF1ACDB00AA8384 /* .gitignore */,
 				CA41D9A32CB98313000DCD06 /* Moneym8 */,
 				CA41D9B62CB98316000DCD06 /* Moneym8Tests */,
 				CA41D9C02CB98317000DCD06 /* Moneym8UITests */,
+				CAE3CAFE2D111D2D00F3A8FF /* Money widget */,
 				CA2054BD2CF8EA1B001B714E /* Frameworks */,
 				CA41D9A22CB98313000DCD06 /* Products */,
 			);
@@ -150,6 +221,7 @@
 				CA41D9A12CB98313000DCD06 /* Moneym8.app */,
 				CA41D9B32CB98316000DCD06 /* Moneym8Tests.xctest */,
 				CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */,
+				CAE3CAFB2D111D2C00F3A8FF /* Money widgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -164,10 +236,12 @@
 				CA41D99D2CB98313000DCD06 /* Sources */,
 				CA41D99E2CB98313000DCD06 /* Frameworks */,
 				CA41D99F2CB98313000DCD06 /* Resources */,
+				CA17351E2D0F3CAE0020CBDB /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CAE3CB0D2D111D2F00F3A8FF /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				CA41D9A32CB98313000DCD06 /* Moneym8 */,
@@ -249,6 +323,28 @@
 			productReference = CA41D9BD2CB98316000DCD06 /* Moneym8UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		CAE3CAFA2D111D2C00F3A8FF /* Money widgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CAE3CB0F2D111D2F00F3A8FF /* Build configuration list for PBXNativeTarget "Money widgetExtension" */;
+			buildPhases = (
+				CAE3CAF72D111D2C00F3A8FF /* Sources */,
+				CAE3CAF82D111D2C00F3A8FF /* Frameworks */,
+				CAE3CAF92D111D2C00F3A8FF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CAE3CAFE2D111D2D00F3A8FF /* Money widget */,
+			);
+			name = "Money widgetExtension";
+			packageProductDependencies = (
+			);
+			productName = "Money widgetExtension";
+			productReference = CAE3CAFB2D111D2C00F3A8FF /* Money widgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -256,7 +352,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					CA41D9A02CB98313000DCD06 = {
@@ -269,6 +365,9 @@
 					CA41D9BC2CB98316000DCD06 = {
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = CA41D9A02CB98313000DCD06;
+					};
+					CAE3CAFA2D111D2C00F3A8FF = {
+						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
@@ -292,6 +391,7 @@
 				CA41D9A02CB98313000DCD06 /* Moneym8 */,
 				CA41D9B22CB98316000DCD06 /* Moneym8Tests */,
 				CA41D9BC2CB98316000DCD06 /* Moneym8UITests */,
+				CAE3CAFA2D111D2C00F3A8FF /* Money widgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -313,6 +413,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CA41D9BB2CB98316000DCD06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CAE3CAF92D111D2C00F3A8FF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -343,6 +450,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CAE3CAF72D111D2C00F3A8FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -355,6 +469,11 @@
 			isa = PBXTargetDependency;
 			target = CA41D9A02CB98313000DCD06 /* Moneym8 */;
 			targetProxy = CA41D9BE2CB98317000DCD06 /* PBXContainerItemProxy */;
+		};
+		CAE3CB0D2D111D2F00F3A8FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CAE3CAFA2D111D2C00F3A8FF /* Money widgetExtension */;
+			targetProxy = CAE3CB0C2D111D2F00F3A8FF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -483,19 +602,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Moneym8/Moneym8.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Moneym8/Preview Content\"";
 				DEVELOPMENT_TEAM = N9QB443496;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Moneym8/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Moneym8;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "YES UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -503,9 +626,11 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				hi = "";
 			};
 			name = Debug;
@@ -515,19 +640,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Moneym8/Moneym8.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Moneym8/Preview Content\"";
 				DEVELOPMENT_TEAM = N9QB443496;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Moneym8/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Moneym8;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "YES UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -535,9 +664,11 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				hi = "";
 				"hi[arch=*]" = "";
 			};
@@ -551,7 +682,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N9QB443496;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -570,7 +701,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N9QB443496;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -588,6 +719,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N9QB443496;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -605,6 +737,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N9QB443496;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -612,6 +745,64 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Moneym8;
+			};
+			name = Release;
+		};
+		CAE3CB102D111D2F00F3A8FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "Money widgetExtension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N9QB443496;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Money widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Money widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CAE3CB112D111D2F00F3A8FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "Money widgetExtension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N9QB443496;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Money widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Money widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jackpotautomations.fyi.Moneym8.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -650,6 +841,15 @@
 			buildConfigurations = (
 				CA41D9CE2CB98317000DCD06 /* Debug */,
 				CA41D9CF2CB98317000DCD06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CAE3CB0F2D111D2F00F3A8FF /* Build configuration list for PBXNativeTarget "Money widgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CAE3CB102D111D2F00F3A8FF /* Debug */,
+				CAE3CB112D111D2F00F3A8FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

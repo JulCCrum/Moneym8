@@ -50,18 +50,22 @@ struct AboutView: View {
                 Section(header: Text("LINKS")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))) {
-                    Link("Privacy Policy", destination: URL(string: "https://example.com/privacy")!)
+                    Link("Privacy Policy", destination: URL(string: "https://www.jackpotautomations.fyi/PrivacyPolicy.html")!)
                         .foregroundColor(.blue)
-                    Link("Terms of Service", destination: URL(string: "https://example.com/terms")!)
+                    Link("Terms of Service", destination: URL(string: "https://www.jackpotautomations.fyi/TermsofService.html")!)
                         .foregroundColor(.blue)
-                    Link("Contact Support", destination: URL(string: "https://example.com/support")!)
-                        .foregroundColor(.blue)
+                    Button("Contact Support") {
+                        if let url = URL(string: "mailto:info@jackpotautomations.fyi") {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                    .foregroundColor(.blue)
                 }
                 
                 Section(header: Text("LEGAL")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))) {
-                    Text("© 2024 Your Company. All rights reserved.")
+                    Text("© 2024 Jackpot Automations LLC. All rights reserved.")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
