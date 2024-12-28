@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url,
-           url.scheme == "moneym8" && url.host == "addtransaction" {
+           url.scheme == "moneym8" && url.host == "addexpense" {
             NotificationCenter.default.post(
                 name: NSNotification.Name("ShowAddTransaction"),
                 object: nil

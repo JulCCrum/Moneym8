@@ -38,7 +38,7 @@ struct WidgetEntryView: View {
                         .font(.system(size: 10))
                 }
             }
-            .widgetURL(URL(string: "moneym8://addtransaction"))
+            .widgetURL(URL(string: "moneym8://addexpense"))
             
         default:
             EmptyView()
@@ -50,7 +50,7 @@ struct TransactionLockScreenWidget: Widget {
     private let supportedFamilies: [WidgetFamily] = [.accessoryCircular]
     
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: "com.moneym8.addtransaction", provider: Provider()) { entry in
+        StaticConfiguration(kind: "com.moneym8.addexpense", provider: Provider()) { entry in
             WidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Quick Add")
