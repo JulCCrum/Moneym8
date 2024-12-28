@@ -32,7 +32,7 @@ struct AboutView: View {
                         Text("Moneym8")
                             .font(.title)
                             .fontWeight(.bold)
-                        Text("Version 1.0.0")
+                        Text("Version 1.0")
                             .foregroundColor(.gray)
                     }
                     .frame(maxWidth: .infinity)
@@ -42,7 +42,7 @@ struct AboutView: View {
                 Section(header: Text("APP INFO")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))) {
-                    LabeledContent("Developer", value: "Your Name")
+                    LabeledContent("Developer", value: "Jackpot Automations")
                     LabeledContent("Released", value: "2024")
                     LabeledContent("Framework", value: "SwiftUI")
                 }
