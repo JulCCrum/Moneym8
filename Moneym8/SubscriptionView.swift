@@ -41,10 +41,33 @@ struct SubscriptionView: View {
                 Section(header: Text("FEATURES INCLUDED")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))) {
-                    FeatureRow(icon: "chart.bar.fill", text: "Advanced Analytics")
-                    FeatureRow(icon: "bell.fill", text: "Custom Notifications")
-                    FeatureRow(icon: "icloud.fill", text: "Cloud Backup")
-                    FeatureRow(icon: "doc.fill", text: "Export Reports")
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("• Advanced Analytics")
+                            Spacer()
+                            Image(systemName: "chart.bar.fill")
+                                .foregroundColor(.purple)
+                        }
+                        HStack {
+                            Text("• Custom Notifications")
+                            Spacer()
+                            Image(systemName: "bell.fill")
+                                .foregroundColor(.purple)
+                        }
+                        HStack {
+                            Text("• Cloud Backup")
+                            Spacer()
+                            Image(systemName: "icloud.fill")
+                                .foregroundColor(.purple)
+                        }
+                        HStack {
+                            Text("• Export Reports")
+                            Spacer()
+                            Image(systemName: "doc.fill")
+                                .foregroundColor(.purple)
+                        }
+                    }
+                    .padding(.vertical, 8)
                 }
                 
                 Section(header: Text("SUBSCRIPTION OPTIONS")
@@ -82,19 +105,6 @@ struct SubscriptionView: View {
             .listStyle(InsetGroupedListStyle())
         }
         .background(Color(uiColor: .systemGroupedBackground))
-    }
-}
-
-struct FeatureRow: View {
-    let icon: String
-    let text: String
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .foregroundColor(.purple)
-            Text(text)
-        }
     }
 }
 

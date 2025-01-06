@@ -8,11 +8,13 @@ import SwiftUI
 struct AddIncomeView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: TransactionViewModel
+    
     @State private var amount: String = ""
     @State private var selectedCategory: String = "Salary"
     @State private var date: Date = Date()
     @State private var note: String = ""
     @FocusState private var amountIsFocused: Bool
+    @FocusState private var noteIsFocused: Bool
     
     let categories = ["Salary", "Investment", "Gift", "Other"]
     
@@ -101,6 +103,7 @@ struct AddIncomeView: View {
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
                 TextField("Add a note", text: $note)
+                    .focused($noteIsFocused)
                     .padding()
                     .background(Color(.tertiarySystemBackground))
                     .cornerRadius(10)
@@ -146,6 +149,7 @@ struct AddIncomeView: View {
                 Spacer()
                 Button("Done") {
                     amountIsFocused = false
+                    noteIsFocused = false
                 }
             }
         }
@@ -154,7 +158,8 @@ struct AddIncomeView: View {
     private func saveIncome() {
         guard let amountValue = Double(amount), amountValue > 0 else { return }
         
-        let transaction = Transaction(
+        // Create an ExpenseTransaction instead of Transaction
+        let incomeTransaction = ExpenseTransaction(
             amount: amountValue,
             isIncome: true,
             date: date,
@@ -162,7 +167,10 @@ struct AddIncomeView: View {
             note: note.isEmpty ? nil : note
         )
         
-        viewModel.addTransaction(transaction)
+        // Add it via the ViewModel
+        viewModel.addTransaction(incomeTransaction)
+        
+        // Dismiss after saving
         dismiss()
     }
 }

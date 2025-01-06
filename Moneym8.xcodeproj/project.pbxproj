@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CA054C5F2CF1ACE300AA8384 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = CA054C5E2CF1ACDB00AA8384 /* .gitignore */; };
+		CA13134C2D2761C400F08208 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA17351F2D0F3D410020CBDB /* AppIntents.framework */; };
 		CAA348742D062AF4004BAE1F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CAA348732D062AF4004BAE1F /* FirebaseAnalytics */; };
 		CAA348762D062AF4004BAE1F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = CAA348752D062AF4004BAE1F /* FirebaseAnalyticsOnDeviceConversion */; };
 		CAA348782D062AF4004BAE1F /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = CAA348772D062AF4004BAE1F /* FirebaseAnalyticsWithoutAdIdSupport */; };
@@ -88,19 +89,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CAE3CB122D111D2F00F3A8FF /* Exceptions for "Money widget" folder in "Money widgetExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = CAE3CAFA2D111D2C00F3A8FF /* Money widgetExtension */;
-		};
-		CAE3CB202D1880E700F3A8FF /* Exceptions for "Moneym8" folder in "Moneym8" target */ = {
+		CA13134D2D27650600F08208 /* Exceptions for "Moneym8" folder in "Moneym8" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = CA41D9A02CB98313000DCD06 /* Moneym8 */;
+		};
+		CA13134E2D27651700F08208 /* Exceptions for "Money widget" folder in "Money widgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CAE3CAFA2D111D2C00F3A8FF /* Money widgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -108,7 +109,7 @@
 		CA41D9A32CB98313000DCD06 /* Moneym8 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				CAE3CB202D1880E700F3A8FF /* Exceptions for "Moneym8" folder in "Moneym8" target */,
+				CA13134D2D27650600F08208 /* Exceptions for "Moneym8" folder in "Moneym8" target */,
 			);
 			path = Moneym8;
 			sourceTree = "<group>";
@@ -126,7 +127,7 @@
 		CAE3CAFE2D111D2D00F3A8FF /* Money widget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				CAE3CB122D111D2F00F3A8FF /* Exceptions for "Money widget" folder in "Money widgetExtension" target */,
+				CA13134E2D27651700F08208 /* Exceptions for "Money widget" folder in "Money widgetExtension" target */,
 			);
 			path = "Money widget";
 			sourceTree = "<group>";
@@ -185,6 +186,7 @@
 			files = (
 				CAE3CAFD2D111D2D00F3A8FF /* SwiftUI.framework in Frameworks */,
 				CAE3CAFC2D111D2D00F3A8FF /* WidgetKit.framework in Frameworks */,
+				CA13134C2D2761C400F08208 /* AppIntents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    @StateObject private var authManager = AuthManager.shared
+    @ObservedObject private var authManager = AuthManager.shared
     @State private var email = ""
     @State private var password = ""
     @State private var isSignUp = false
@@ -71,4 +71,8 @@ struct AuthenticationView: View {
             Text(authManager.errorMessage ?? "An error occurred")
         }
     }
+}
+
+#Preview {
+    AuthenticationView()
 }

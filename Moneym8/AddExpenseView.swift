@@ -2,23 +2,32 @@
 //  AddExpenseView.swift
 //  Moneym8
 //
+//  Created by chase Crummedyo on some date
+//
 
 import SwiftUI
+import FirebaseFirestore
 
 struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
+    
+    /// Your observable ViewModel; must be a class conforming to ObservableObject.
     @ObservedObject var viewModel: TransactionViewModel
+    
     @State private var amount: String = ""
     @State private var selectedCategory: String = "Food"
     @State private var date: Date = Date()
     @State private var note: String = ""
     @FocusState private var amountIsFocused: Bool
+    @FocusState private var noteIsFocused: Bool
     
+    /// Example categories for the picker/menu
     let categories = ["Rent", "Food", "Transportation", "Other"]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            // Header with X button
+            
+            // Header
             HStack {
                 Text("Add Expense")
                     .font(.largeTitle)
@@ -43,6 +52,7 @@ struct AddExpenseView: View {
                 Text("AMOUNT")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
+                
                 HStack {
                     Text("$")
                         .foregroundColor(.gray)
@@ -59,9 +69,12 @@ struct AddExpenseView: View {
                 Text("CATEGORY")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
+                
                 Menu {
                     ForEach(categories, id: \.self) { category in
-                        Button(action: { selectedCategory = category }) {
+                        Button(action: {
+                            selectedCategory = category
+                        }) {
                             Text(category)
                         }
                     }
@@ -84,9 +97,13 @@ struct AddExpenseView: View {
                 Text("DATE")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
+                
                 HStack {
+                    // DatePicker for the date
                     DatePicker("", selection: $date, displayedComponents: [.date])
                         .labelsHidden()
+                    
+                    // DatePicker for the time
                     DatePicker("", selection: $date, displayedComponents: [.hourAndMinute])
                         .labelsHidden()
                 }
@@ -100,7 +117,9 @@ struct AddExpenseView: View {
                 Text("NOTE (OPTIONAL)")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
+                
                 TextField("Add a note", text: $note)
+                    .focused($noteIsFocused)
                     .padding()
                     .background(Color(.tertiarySystemBackground))
                     .cornerRadius(10)
@@ -111,6 +130,7 @@ struct AddExpenseView: View {
             
             // Buttons
             VStack(spacing: 12) {
+                // Save button
                 Button(action: { saveExpense() }) {
                     HStack {
                         Image(systemName: "checkmark")
@@ -125,6 +145,7 @@ struct AddExpenseView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 
+                // Cancel button
                 Button(action: { dismiss() }) {
                     HStack {
                         Image(systemName: "xmark")
@@ -146,15 +167,19 @@ struct AddExpenseView: View {
                 Spacer()
                 Button("Done") {
                     amountIsFocused = false
+                    noteIsFocused = false
                 }
             }
         }
     }
     
+    /// Called when user taps "Save Transaction"
     private func saveExpense() {
+        // Ensure a valid numeric amount
         guard let amountValue = Double(amount), amountValue > 0 else { return }
         
-        let transaction = Transaction(
+        // Create your ExpenseTransaction instance
+        let expenseTransaction = ExpenseTransaction(
             amount: amountValue,
             isIncome: false,
             date: date,
@@ -162,13 +187,19 @@ struct AddExpenseView: View {
             note: note.isEmpty ? nil : note
         )
         
-        viewModel.addTransaction(transaction)
+        // Call the ViewModel to add the transaction to Firestore
+        viewModel.addTransaction(expenseTransaction)
+        
+        // Dismiss the sheet
         dismiss()
     }
 }
 
+// MARK: - Preview
+
 struct AddExpenseView_Previews: PreviewProvider {
     static var previews: some View {
+        // Provide a mock or real TransactionViewModel here
         AddExpenseView(viewModel: TransactionViewModel())
     }
 }

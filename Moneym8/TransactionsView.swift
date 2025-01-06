@@ -1,6 +1,8 @@
 //
 //  TransactionsView.swift
 //  Moneym8
+//
+
 import SwiftUI
 
 extension String {
@@ -31,7 +33,9 @@ extension String {
 struct TransactionsView: View {
     @Binding var isExpanded: Bool
     @Binding var isBlurred: Bool
+    
     @ObservedObject var viewModel: TransactionViewModel
+    
     @State private var selectedSort: SortOption = .dateDesc
     @Environment(\.colorScheme) var colorScheme
     
@@ -43,18 +47,24 @@ struct TransactionsView: View {
         case category = "Category"
     }
     
-    private var sortedTransactions: [Transaction] {
+    // Use ExpenseTransaction instead of Transaction
+    private var sortedTransactions: [ExpenseTransaction] {
         viewModel.transactions.sorted { first, second in
             switch selectedSort {
             case .dateDesc:
+                // newest first
                 return first.date > second.date
             case .dateAsc:
+                // oldest first
                 return first.date < second.date
             case .amountDesc:
+                // high to low
                 return first.amount > second.amount
             case .amountAsc:
+                // low to high
                 return first.amount < second.amount
             case .category:
+                // alphabetical by category
                 return first.category < second.category
             }
         }
@@ -69,6 +79,7 @@ struct TransactionsView: View {
                 .padding(.leading)
                 .padding(.bottom, 20)
             
+            // Sorting Menu
             Menu {
                 Picker("Sort by", selection: $selectedSort) {
                     ForEach(SortOption.allCases, id: \.self) { option in
@@ -82,7 +93,9 @@ struct TransactionsView: View {
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
-                .background(colorScheme == .dark ? Color.gray.opacity(0.3) : Color.gray.opacity(0.2))
+                .background(colorScheme == .dark
+                            ? Color.gray.opacity(0.3)
+                            : Color.gray.opacity(0.2))
                 .cornerRadius(10)
                 .foregroundColor(colorScheme == .dark ? .white : .black)
             }
@@ -90,16 +103,23 @@ struct TransactionsView: View {
             .padding(.leading)
             .padding(.bottom, 20)
             
+            // Transactions List
             List {
-                ForEach(sortedTransactions) { transaction in
-                    TransactionRow(transaction: transaction, viewModel: viewModel)
-                        .listRowBackground(Color.clear)
+                ForEach(sortedTransactions) { expenseTransaction in
+                    TransactionRow(
+                        expenseTransaction: expenseTransaction,
+                        viewModel: viewModel
+                    )
+                    .listRowBackground(Color.clear)
                 }
                 .onDelete { indexSet in
-                    let transactionsToDelete = indexSet.map { sortedTransactions[$0] }
-                    for transaction in transactionsToDelete {
-                        if let index = viewModel.transactions.firstIndex(where: { $0.id == transaction.id }) {
-                            viewModel.transactions.remove(at: index)
+                    let toDelete = indexSet.map { sortedTransactions[$0] }
+                    for expenseTransaction in toDelete {
+                        // remove from the main array
+                        if let idx = viewModel.transactions.firstIndex(where: {
+                            $0.id == expenseTransaction.id
+                        }) {
+                            viewModel.transactions.remove(at: idx)
                         }
                     }
                 }
@@ -124,7 +144,7 @@ struct TransactionsView: View {
 }
 
 struct TransactionRow: View {
-    let transaction: Transaction
+    let expenseTransaction: ExpenseTransaction
     @ObservedObject var viewModel: TransactionViewModel
     @State private var showingDetail = false
     @Environment(\.colorScheme) var colorScheme
@@ -134,31 +154,37 @@ struct TransactionRow: View {
             HStack {
                 ZStack {
                     Circle()
-                        .fill(transaction.category.color.opacity(colorScheme == .dark ? 1 : 0.1))
+                        .fill(expenseTransaction.category.color.opacity(
+                            colorScheme == .dark ? 1 : 0.1
+                        ))
                         .frame(width: 40, height: 40)
-                    Text(transaction.category.emoji)
+                    
+                    Text(expenseTransaction.category.emoji)
                 }
                 
                 VStack(alignment: .leading) {
-                    Text(transaction.category)
+                    Text(expenseTransaction.category)
                         .font(.headline)
                         .foregroundColor(colorScheme == .dark ? .white : .black)
-                    Text(formatDate(transaction.date))
+                    Text(formatDate(expenseTransaction.date))
                         .font(.caption)
                         .foregroundColor(Color(hex: "808080"))
                 }
                 
                 Spacer()
                 
-                Text(transaction.formattedAmount)
+                Text(expenseTransaction.formattedAmount)
                     .font(.headline)
-                    .foregroundColor(transaction.isIncome ? .green : .red)
+                    .foregroundColor(expenseTransaction.isIncome ? .green : .red)
             }
             .padding(.vertical, 4)
         }
         .buttonStyle(PlainButtonStyle())
         .fullScreenCover(isPresented: $showingDetail) {
-            TransactionDetailView(viewModel: viewModel, transaction: transaction)
+            TransactionDetailView(
+                viewModel: viewModel,
+                expenseTransaction: expenseTransaction
+            )
         }
     }
     
@@ -166,6 +192,36 @@ struct TransactionRow: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: date)
+    }
+}
+
+// A helper extension to format the amount with currency style
+extension ExpenseTransaction {
+    var formattedAmount: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        return formatter.string(from: NSNumber(value: amount)) ?? "$0.00"
+    }
+}
+
+// A helper to convert hex string to Color
+extension Color {
+    init(hex: String) {
+        let scanner = Scanner(string: hex)
+        var rgbValue: UInt64 = 0
+        scanner.scanHexInt64(&rgbValue)
+        
+        let r = (rgbValue & 0xFF0000) >> 16
+        let g = (rgbValue & 0x00FF00) >> 8
+        let b = (rgbValue & 0x0000FF)
+        
+        self = Color(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: 1
+        )
     }
 }
 

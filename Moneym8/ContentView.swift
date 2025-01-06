@@ -10,16 +10,19 @@ import FirebaseFirestore
 
 struct ContentView: View {
     @StateObject private var transactionViewModel = TransactionViewModel()
-    @State private var selectedTab = 1
+
+    @State private var selectedTab = 0  // Changed from 1 to 0
     @State private var isExpanded = false
     @State private var isBlurred = false
     @State private var showAddExpense = false
     @State private var showAddIncome = false
     @State private var showHelp = false
+
     @AppStorage("isDarkMode") private var isDarkMode = false
-    // Add this binding
+
+    // The Binding from SceneDelegate that indicates when to show AddExpenseView
     @Binding var showAddTransaction: Bool
-    
+
     var body: some View {
         NavigationView {
             TabView(selection: $selectedTab) {
@@ -32,14 +35,16 @@ struct ContentView: View {
                     }
                     .tag(0)
                 
-                TransactionsView(isExpanded: $isExpanded, isBlurred: $isBlurred, viewModel: transactionViewModel)
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "dollarsign.circle.fill")
-                            Text("Transactions")
-                        }
+                TransactionsView(isExpanded: $isExpanded,
+                                 isBlurred: $isBlurred,
+                                 viewModel: transactionViewModel)
+                .tabItem {
+                    VStack {
+                        Image(systemName: "dollarsign.circle.fill")
+                        Text("Transactions")
                     }
-                    .tag(1)
+                }
+                .tag(1)
                 
                 ProfileView()
                     .tabItem {
@@ -56,6 +61,7 @@ struct ContentView: View {
         .overlay(
             Group {
                 if selectedTab == 1 {
+                    // If user is on the Transactions tab, show floating buttons
                     FloatingActionButtons(
                         isExpanded: isExpanded,
                         isBlurred: isBlurred,
@@ -70,26 +76,31 @@ struct ContentView: View {
                 }
             }
         )
+        // The "Add Expense" sheet
         .sheet(isPresented: $showAddExpense) {
             NavigationView {
                 AddExpenseView(viewModel: transactionViewModel)
             }
         }
+        // The "Add Income" sheet
         .sheet(isPresented: $showAddIncome) {
             NavigationView {
                 AddIncomeView(viewModel: transactionViewModel)
             }
         }
+        // The "Help" sheet
         .sheet(isPresented: $showHelp) {
             NavigationView {
                 HelpView()
             }
         }
-        // Add this modifier to handle the shortcut trigger
-        .onChange(of: showAddTransaction) { oldValue, newValue in
-            if newValue {
+        // Whenever showAddTransaction flips to true, showAddExpense = true
+        .onChange(of: showAddTransaction) { oldVal, newVal in
+            print("DEBUG: ContentView showAddTransaction changed to \(newVal)")
+            if newVal {
                 showAddExpense = true
-                showAddTransaction = false  // Reset after triggering
+                // reset after showing
+                showAddTransaction = false
             }
         }
     }
@@ -100,15 +111,19 @@ struct ContentView: View {
             isBlurred = false
         }
         switch index {
-        case 0: showAddExpense = true
-        case 1: showAddIncome = true
-        case 2: showHelp = true
-        default: break
+        case 0:
+            showAddExpense = true
+        case 1:
+            showAddIncome = true
+        case 2:
+            showHelp = true
+        default:
+            break
         }
     }
 }
 
-// Update the preview provider
+// For SwiftUI previews
 #Preview {
     ContentView(showAddTransaction: .constant(false))
 }

@@ -1,60 +1,71 @@
+//
+//  TransactionLockScreenWidget.swift
+//  Money widget
+//
+
 import WidgetKit
 import SwiftUI
-
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-}
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date())
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
         let entry = SimpleEntry(date: Date())
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        let entry = SimpleEntry(date: Date())
-        let timeline = Timeline(entries: [entry], policy: .never)
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> Void) {
+        let entries = [SimpleEntry(date: Date())]
+        let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
 }
 
+struct SimpleEntry: TimelineEntry {
+    let date: Date
+}
+
 struct WidgetEntryView: View {
     @Environment(\.widgetFamily) var family
-    var entry: Provider.Entry
 
     var body: some View {
         switch family {
         case .accessoryCircular:
-            ZStack {
-                AccessoryWidgetBackground()
-                VStack(spacing: 2) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 20))
-                    Text("Add")
-                        .font(.system(size: 10))
+            Link(destination: URL(string: "moneym8://addexpense")!) {
+                ZStack {
+                    if #available(iOS 16.0, *) {
+                        AccessoryWidgetBackground()
+                    }
+                    VStack(spacing: 2) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 20))
+                        Text("Add")
+                            .font(.system(size: 10))
+                    }
                 }
             }
-            .widgetURL(URL(string: "moneym8://addexpense"))
-            
+
         default:
+            // For any other widget family (like .systemMedium),
+            // show nothing, since we only support .accessoryCircular.
             EmptyView()
         }
     }
 }
 
+@main
 struct TransactionLockScreenWidget: Widget {
-    private let supportedFamilies: [WidgetFamily] = [.accessoryCircular]
-    
+    let kind: String = "TransactionLockScreenWidget"
+
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: "com.moneym8.addexpense", provider: Provider()) { entry in
-            WidgetEntryView(entry: entry)
+        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+            WidgetEntryView()
         }
         .configurationDisplayName("Quick Add")
-        .description("Quickly add transactions from your lock screen")
-        .supportedFamilies(supportedFamilies)
+        .description("Quickly add transactions from your lock screen.")
+        // IMPORTANT: Only accessoryCircular is supported here.
+        .supportedFamilies([.accessoryCircular])
     }
 }

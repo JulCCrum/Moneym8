@@ -2,7 +2,6 @@
 //  TransactionDetailView.swift
 //  Moneym8
 //
-import SwiftUI
 
 import SwiftUI
 import FirebaseFirestore
@@ -10,7 +9,9 @@ import FirebaseFirestore
 struct TransactionDetailView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: TransactionViewModel
-    let transaction: Transaction
+    
+    // Instead of `let transaction: Transaction`, use your custom type:
+    let expenseTransaction: ExpenseTransaction
     
     @State private var amount: String = ""
     @State private var selectedCategory: String = ""
@@ -67,7 +68,7 @@ struct TransactionDetailView: View {
             // Details Section
             GroupBox(label: Text("DETAILS").foregroundColor(.gray)) {
                 VStack(spacing: 16) {
-                    // Type Picker
+                    // Type Picker (Expense vs. Income)
                     HStack {
                         Text("Type")
                         Spacer()
@@ -86,8 +87,8 @@ struct TransactionDetailView: View {
                         Text("Category")
                         Spacer()
                         Picker("Category", selection: $selectedCategory) {
-                            ForEach(isIncome ? incomeCategories : expenseCategories, id: \.self) { category in
-                                Text(category).tag(category)
+                            ForEach(isIncome ? incomeCategories : expenseCategories, id: \.self) {
+                                Text($0).tag($0)
                             }
                         }
                         .pickerStyle(.menu)
@@ -96,7 +97,7 @@ struct TransactionDetailView: View {
                     
                     Divider()
                     
-                    // Date
+                    // Date & Time
                     HStack {
                         Text("Date")
                         Spacer()
@@ -149,16 +150,17 @@ struct TransactionDetailView: View {
         }
         .padding()
         .onAppear {
-            amount = String(format: "%.2f", transaction.amount)
-            selectedCategory = transaction.category
-            date = transaction.date
-            note = transaction.note ?? ""
-            isIncome = transaction.isIncome
+            // Initialize fields from the expenseTransaction
+            amount = String(format: "%.2f", expenseTransaction.amount)
+            selectedCategory = expenseTransaction.category
+            date = expenseTransaction.date
+            note = expenseTransaction.note ?? ""
+            isIncome = expenseTransaction.isIncome
         }
         .alert("Delete Transaction", isPresented: $showingDeleteAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
-                viewModel.removeTransaction(transaction)
+                viewModel.removeTransaction(expenseTransaction)
                 dismiss()
             }
         } message: {
@@ -177,8 +179,9 @@ struct TransactionDetailView: View {
     private func saveChanges() {
         guard let amountValue = Double(amount) else { return }
         
-        let updatedTransaction = Transaction(
-            id: transaction.id ?? UUID().uuidString,
+        // Create a new updated ExpenseTransaction
+        let updated = ExpenseTransaction(
+            id: expenseTransaction.id ?? UUID().uuidString,
             amount: amountValue,
             isIncome: isIncome,
             date: date,
@@ -186,11 +189,14 @@ struct TransactionDetailView: View {
             note: note.isEmpty ? nil : note
         )
         
-        viewModel.removeTransaction(transaction)
-        viewModel.addTransaction(updatedTransaction)
+        // Remove the old transaction, add the new one
+        viewModel.removeTransaction(expenseTransaction)
+        viewModel.addTransaction(updated)
+        
         dismiss()
     }
     
+    // Helpers for category color & emoji
     private func categoryColor(for category: String) -> Color {
         switch category {
         case "Rent": return .blue

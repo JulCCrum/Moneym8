@@ -40,7 +40,7 @@ struct HelpView: View {
                 
                 Section(header: Text("SUPPORT")) {
                     Button(action: {
-                        if let url = URL(string: "mailto:support@moneym8.com") {
+                        if let url = URL(string: "mailto:info@jackpotautomations.fyi") {
                             UIApplication.shared.open(url)
                         }
                     }) {

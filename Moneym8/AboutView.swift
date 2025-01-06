@@ -8,6 +8,8 @@ import SwiftUI
 
 struct AboutView: View {
     @Environment(\.presentationMode) var presentationMode
+    @StateObject private var authManager = AuthManager.shared
+    @State private var showLogoutAlert = false // Add this line
     
     var body: some View {
         VStack(alignment: .leading, spacing: -15) {
@@ -60,6 +62,10 @@ struct AboutView: View {
                         }
                     }
                     .foregroundColor(.blue)
+                    Button("Logout") {
+                        showLogoutAlert = true // Show alert instead of immediate logout
+                    }
+                    .foregroundColor(.red)
                 }
                 
                 Section(header: Text("LEGAL")
@@ -73,6 +79,14 @@ struct AboutView: View {
             .listStyle(InsetGroupedListStyle())
         }
         .background(Color(uiColor: .systemGroupedBackground))
+        .alert("Logout", isPresented: $showLogoutAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Logout", role: .destructive) {
+                authManager.signOut()
+            }
+        } message: {
+            Text("Are you sure you want to logout?")
+        }
     }
 }
 
