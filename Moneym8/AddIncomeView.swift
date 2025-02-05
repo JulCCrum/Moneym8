@@ -1,4 +1,3 @@
-//
 //  AddIncomeView.swift
 //  Moneym8
 //
@@ -13,16 +12,21 @@ struct AddIncomeView: View {
     @State private var selectedCategory: String = "Salary"
     @State private var date: Date = Date()
     @State private var note: String = ""
+    @State private var isIncome: Bool = true
     @FocusState private var amountIsFocused: Bool
     @FocusState private var noteIsFocused: Bool
     
-    let categories = ["Salary", "Investment", "Gift", "Other"]
+    let expenseCategories = ["Rent", "Food", "Transportation", "Other"]
+    let incomeCategories = ["Salary", "Investment", "Gift", "Other"]
+    
+    var categories: [String] {
+        isIncome ? incomeCategories : expenseCategories
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            // Header with X button
             HStack {
-                Text("Add Income")
+                Text("Add Transaction")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 Spacer()
@@ -40,7 +44,22 @@ struct AddIncomeView: View {
             }
             .padding(.top)
             
-            // AMOUNT
+            // Transaction Type
+            VStack(alignment: .leading, spacing: 8) {
+                Text("TYPE")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))
+                
+                Picker("Transaction Type", selection: $isIncome) {
+                    Text("Expense").tag(false)
+                    Text("Income").tag(true)
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: isIncome) { oldValue, newValue in
+                    selectedCategory = categories[0]
+                }
+            }
+            
             VStack(alignment: .leading, spacing: 8) {
                 Text("AMOUNT")
                     .foregroundColor(.gray)
@@ -56,7 +75,6 @@ struct AddIncomeView: View {
                 .font(.system(size: 24))
             }
             
-            // CATEGORY
             VStack(alignment: .leading, spacing: 8) {
                 Text("CATEGORY")
                     .foregroundColor(.gray)
@@ -81,7 +99,6 @@ struct AddIncomeView: View {
                 .buttonStyle(PlainButtonStyle())
             }
             
-            // DATE
             VStack(alignment: .leading, spacing: 8) {
                 Text("DATE")
                     .foregroundColor(.gray)
@@ -97,7 +114,6 @@ struct AddIncomeView: View {
                 .cornerRadius(10)
             }
             
-            // NOTE
             VStack(alignment: .leading, spacing: 8) {
                 Text("NOTE (OPTIONAL)")
                     .foregroundColor(.gray)
@@ -112,7 +128,6 @@ struct AddIncomeView: View {
             
             Spacer(minLength: 20)
             
-            // Buttons
             VStack(spacing: 12) {
                 Button(action: { saveIncome() }) {
                     HStack {
@@ -158,19 +173,15 @@ struct AddIncomeView: View {
     private func saveIncome() {
         guard let amountValue = Double(amount), amountValue > 0 else { return }
         
-        // Create an ExpenseTransaction instead of Transaction
-        let incomeTransaction = ExpenseTransaction(
+        let transaction = ExpenseTransaction(
             amount: amountValue,
-            isIncome: true,
+            isIncome: isIncome,
             date: date,
             category: selectedCategory,
             note: note.isEmpty ? nil : note
         )
         
-        // Add it via the ViewModel
-        viewModel.addTransaction(incomeTransaction)
-        
-        // Dismiss after saving
+        viewModel.addTransaction(transaction)
         dismiss()
     }
 }

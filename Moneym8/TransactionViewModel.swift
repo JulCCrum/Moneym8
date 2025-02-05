@@ -9,8 +9,6 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
 
-/// Your custom struct that was previously named 'Transaction'.
-/// Renamed to avoid collision with Firestore.Transaction.
 struct ExpenseTransaction: Codable, Identifiable {
     @DocumentID var id: String?     // Firestore document ID
     var amount: Double
@@ -21,13 +19,58 @@ struct ExpenseTransaction: Codable, Identifiable {
 }
 
 class TransactionViewModel: ObservableObject {
-    // Now we store an array of ExpenseTransaction (not Transaction)
     @Published var transactions: [ExpenseTransaction] = []
+    @Published var categoryBudgets: [String: Double] = [:]
+    @Published var activeCategories: Set<String>
     
     private var db = Firestore.firestore()
+    private let initialCategories = ["Rent", "Food", "Transportation", "Other"]
+    private let maxCategories = 5
+    
+    var categories: [String] {
+        Array(activeCategories).sorted()
+    }
     
     init() {
+        // Initialize with default categories
+        if let savedCategories = UserDefaults.standard.array(forKey: "activeCategories") as? [String] {
+            activeCategories = Set(savedCategories)
+        } else {
+            activeCategories = Set(initialCategories)
+            UserDefaults.standard.set(initialCategories, forKey: "activeCategories")
+        }
+        
+        loadSavedBudgets()
         listenToTransactions()
+    }
+    
+    private func loadSavedBudgets() {
+        // Load all saved budgets for active categories
+        for category in activeCategories {
+            if let savedBudget = UserDefaults.standard.object(forKey: "budget_\(category)") as? Double {
+                categoryBudgets[category] = savedBudget
+            } else {
+                categoryBudgets[category] = 0 // Default budget of 0 for new categories
+            }
+        }
+    }
+    
+    func addCategory(_ category: String) -> Bool {
+        guard activeCategories.count < maxCategories else { return false }
+        activeCategories.insert(category)
+        categoryBudgets[category] = 0
+        saveCategoryChanges()
+        return true
+    }
+    
+    func removeCategory(_ category: String) {
+        activeCategories.remove(category)
+        categoryBudgets.removeValue(forKey: category)
+        saveCategoryChanges()
+    }
+    
+    private func saveCategoryChanges() {
+        UserDefaults.standard.set(Array(activeCategories), forKey: "activeCategories")
     }
     
     private func listenToTransactions() {
@@ -42,19 +85,16 @@ class TransactionViewModel: ObservableObject {
                     return
                 }
                 
-                // Decode each document into an ExpenseTransaction
                 self.transactions = documents.compactMap { doc in
                     try? doc.data(as: ExpenseTransaction.self)
                 }
             }
     }
     
-    /// Add a new ExpenseTransaction to Firestore.
     func addTransaction(_ transaction: ExpenseTransaction) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
         do {
-            // 'addDocument(from:)' uses Codable to encode your ExpenseTransaction
             _ = try db.collection("users").document(userId)
                 .collection("transactions")
                 .addDocument(from: transaction)
@@ -63,7 +103,6 @@ class TransactionViewModel: ObservableObject {
         }
     }
     
-    /// Delete a transaction from Firestore if it has a valid document ID.
     func removeTransaction(_ transaction: ExpenseTransaction) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
@@ -75,22 +114,18 @@ class TransactionViewModel: ObservableObject {
         }
     }
     
-    /// Returns only the transactions where isIncome == false.
     func getExpenses() -> [ExpenseTransaction] {
         transactions.filter { !$0.isIncome }
     }
     
-    /// Returns only the transactions where isIncome == true.
     func getIncome() -> [ExpenseTransaction] {
         transactions.filter { $0.isIncome }
     }
     
-    /// Returns all transactions matching the given category.
     func getTransactions(forCategory category: String) -> [ExpenseTransaction] {
         transactions.filter { $0.category == category }
     }
     
-    /// Returns the total spent in a specific category (only counting expenses).
     func getCategoryTotal(category: String) -> Double {
         let total = transactions
             .filter { $0.category == category && !$0.isIncome }
@@ -98,5 +133,48 @@ class TransactionViewModel: ObservableObject {
         
         print("Category \(category): \(total)")
         return total
+    }
+    
+    var averageMonthlySpending: Double {
+        let calendar = Calendar.current
+        guard let oneMonthAgo = calendar.date(byAdding: .month, value: -1, to: Date()) else { return 0 }
+        
+        let monthlyTotals = transactions
+            .filter { !$0.isIncome }
+            .filter { $0.date >= oneMonthAgo }
+            .reduce(0) { $0 + $1.amount }
+        
+        return monthlyTotals
+    }
+    
+    var averageMonthlyIncome: Double {
+        let calendar = Calendar.current
+        guard let oneMonthAgo = calendar.date(byAdding: .month, value: -1, to: Date()) else { return 0 }
+        
+        let monthlyTotals = transactions
+            .filter { $0.isIncome }
+            .filter { $0.date >= oneMonthAgo }
+            .reduce(0) { $0 + $1.amount }
+        
+        return monthlyTotals
+    }
+    
+    func budget(for category: String) -> Double {
+        categoryBudgets[category] ?? 0
+    }
+    
+    func monthlySpending(for category: String) -> Double {
+        let calendar = Calendar.current
+        guard let oneMonthAgo = calendar.date(byAdding: .month, value: -1, to: Date()) else { return 0 }
+        
+        return transactions
+            .filter { !$0.isIncome && $0.category == category }
+            .filter { $0.date >= oneMonthAgo }
+            .reduce(0) { $0 + $1.amount }
+    }
+    
+    func setBudget(for category: String, amount: Double) {
+        categoryBudgets[category] = amount
+        UserDefaults.standard.set(amount, forKey: "budget_\(category)")
     }
 }

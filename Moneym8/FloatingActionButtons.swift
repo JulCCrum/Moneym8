@@ -1,9 +1,4 @@
-//
-//  FloatingActionButtons.swift
-//  Moneym8
-//
-//  Created by chase Crummedyo on 10/27/24.
-//
+//Created by chase Crummedyo on 10/27/24.
 //
 //  FloatingActionButtons.swift
 //  Moneym8
@@ -35,7 +30,7 @@ struct FloatingActionButtons: View {
                                     .foregroundColor(.white)
                                     .clipShape(Circle())
                             }
-                            .buttonStyle(PlainButtonStyle()) // Add this line
+                            .buttonStyle(PlainButtonStyle())
                             .offset(x: isExpanded ? CGFloat(cos(Double(index) * .pi / 4 + .pi)) * 80 : 0,
                                     y: isExpanded ? CGFloat(sin(Double(index) * .pi / 4 + .pi)) * 80 : 0)
                             .opacity(isExpanded ? 1 : 0)
@@ -52,7 +47,7 @@ struct FloatingActionButtons: View {
                                 .foregroundColor(.white)
                                 .clipShape(Circle())
                         }
-                        .buttonStyle(PlainButtonStyle()) // Add this line
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .offset(x: -geometry.size.width / 10, y: -15)
                     .padding(.bottom, 60)

@@ -2,14 +2,12 @@
 //  ProfileView.swift
 //  Moneym8
 //
-//
-//  ProfileView.swift
-//  Moneym8
-//
+
 import SwiftUI
 
 struct ProfileView: View {
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject var viewModel: TransactionViewModel
     @State private var showInsights = false
     @State private var showHelp = false
     @State private var showPreferences = false
@@ -56,7 +54,7 @@ struct ProfileView: View {
             .listStyle(PlainListStyle())
         }
         .fullScreenCover(isPresented: $showInsights) {
-            InsightsView()
+            InsightsView(viewModel: viewModel)
         }
         .fullScreenCover(isPresented: $showHelp) {
             HelpView()
@@ -73,8 +71,6 @@ struct ProfileView: View {
     }
 }
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView()
-    }
+#Preview {
+    ProfileView(viewModel: TransactionViewModel())
 }

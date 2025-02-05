@@ -1,8 +1,5 @@
-//
 //  LineChartView.swift
 //  Moneym8
-//
-//  Created by chase Crummedyo on 10/25/24.
 //
 import SwiftUI
 import Charts
@@ -17,16 +14,20 @@ struct LineChartView: View {
         
         switch timeframe {
         case "1D":
-            // Group by hour for today
-            let todayStart = calendar.startOfDay(for: Date())
+            // Group by 6-hour intervals for today
             let filteredTransactions = transactions.filter {
                 calendar.isDate($0.date, inSameDayAs: Date())
             }
+            let intervals = [24, 18, 12, 6, 0] // Hours before now
             var hourlyTotals: [(String, Double)] = []
-            for hour in 0...23 {
-                if let date = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: todayStart) {
+            
+            for hour in intervals {
+                if let date = calendar.date(byAdding: .hour, value: -hour, to: Date()) {
                     let total = filteredTransactions
-                        .filter { calendar.component(.hour, from: $0.date) == hour }
+                        .filter {
+                            let hoursDiff = calendar.dateComponents([.hour], from: $0.date, to: Date()).hour ?? 0
+                            return hoursDiff <= hour
+                        }
                         .reduce(0) { $0 + ($1.isIncome ? $1.amount : -$1.amount) }
                     let formatter = DateFormatter()
                     formatter.dateFormat = "ha"
@@ -53,13 +54,19 @@ struct LineChartView: View {
             return dailyTotals.reversed()
             
         case "1M":
-            // Group by week for the month
+            // Group by week with date ranges
             let monthAgo = calendar.date(byAdding: .month, value: -1, to: Date())!
             let filteredTransactions = transactions.filter { $0.date >= monthAgo }
             var weeklyTotals: [(String, Double)] = []
             var weekOffset = 0
+            
             while let weekStart = calendar.date(byAdding: .weekOfYear, value: -weekOffset, to: Date()),
                   weekStart >= monthAgo {
+                let weekEnd = calendar.date(byAdding: .day, value: 6, to: weekStart)!
+                let formatter = DateFormatter()
+                formatter.dateFormat = "M/d"
+                let dateRange = "\(formatter.string(from: weekStart))-\(formatter.string(from: weekEnd))"
+                
                 let weekTotal = filteredTransactions
                     .filter {
                         let weekOfTransaction = calendar.component(.weekOfYear, from: $0.date)
@@ -67,7 +74,8 @@ struct LineChartView: View {
                         return weekOfTransaction == weekOfStart
                     }
                     .reduce(0) { $0 + ($1.isIncome ? $1.amount : -$1.amount) }
-                weeklyTotals.append(("Week \(weekOffset + 1)", weekTotal))
+                
+                weeklyTotals.append((dateRange, weekTotal))
                 weekOffset += 1
             }
             return weeklyTotals.reversed()
@@ -134,9 +142,18 @@ struct LineChartView: View {
                     .foregroundStyle(.gray)
             }
         }
-        .chartYAxis(.hidden)
+        .chartYAxis {
+            AxisMarks { value in
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
+                    .foregroundStyle(.gray.opacity(0.2))
+                AxisTick(stroke: StrokeStyle(lineWidth: 0))
+                AxisValueLabel()
+                    .foregroundStyle(.gray)
+            }
+        }
         .frame(maxWidth: .infinity)
         .frame(height: 200)
+        .padding(.top)
     }
 }
 

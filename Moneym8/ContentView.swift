@@ -10,21 +10,16 @@ import FirebaseFirestore
 
 struct ContentView: View {
     @StateObject private var transactionViewModel = TransactionViewModel()
-
-    @State private var selectedTab = 0  // Changed from 1 to 0
+    @State private var selectedTab = 0
     @State private var isExpanded = false
     @State private var isBlurred = false
     @State private var showAddExpense = false
     @State private var showAddIncome = false
     @State private var showHelp = false
-
     @AppStorage("isDarkMode") private var isDarkMode = false
-
-    // The Binding from SceneDelegate that indicates when to show AddExpenseView
-    @Binding var showAddTransaction: Bool
-
+    
     var body: some View {
-        NavigationView {
+        ZStack {
             TabView(selection: $selectedTab) {
                 HomeView(viewModel: transactionViewModel)
                     .tabItem {
@@ -46,7 +41,7 @@ struct ContentView: View {
                 }
                 .tag(1)
                 
-                ProfileView()
+                ProfileView(viewModel: transactionViewModel)
                     .tabItem {
                         VStack {
                             Image(systemName: "person.fill")
@@ -57,11 +52,10 @@ struct ContentView: View {
             }
             .preferredColorScheme(isDarkMode ? .dark : .light)
             .tint(isDarkMode ? .white : .black)
-        }
-        .overlay(
+            
+            // Floating action buttons as an overlay
             Group {
                 if selectedTab == 1 {
-                    // If user is on the Transactions tab, show floating buttons
                     FloatingActionButtons(
                         isExpanded: isExpanded,
                         isBlurred: isBlurred,
@@ -75,32 +69,21 @@ struct ContentView: View {
                     )
                 }
             }
-        )
-        // The "Add Expense" sheet
+        }
+        // Present sheets outside of TabView for proper presentation
         .sheet(isPresented: $showAddExpense) {
             NavigationView {
                 AddExpenseView(viewModel: transactionViewModel)
             }
         }
-        // The "Add Income" sheet
         .sheet(isPresented: $showAddIncome) {
             NavigationView {
                 AddIncomeView(viewModel: transactionViewModel)
             }
         }
-        // The "Help" sheet
         .sheet(isPresented: $showHelp) {
             NavigationView {
                 HelpView()
-            }
-        }
-        // Whenever showAddTransaction flips to true, showAddExpense = true
-        .onChange(of: showAddTransaction) { oldVal, newVal in
-            print("DEBUG: ContentView showAddTransaction changed to \(newVal)")
-            if newVal {
-                showAddExpense = true
-                // reset after showing
-                showAddTransaction = false
             }
         }
     }
@@ -123,7 +106,7 @@ struct ContentView: View {
     }
 }
 
-// For SwiftUI previews
+// Updated Preview (no Binding needed)
 #Preview {
-    ContentView(showAddTransaction: .constant(false))
+    ContentView()
 }

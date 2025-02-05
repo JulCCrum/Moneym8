@@ -1,10 +1,8 @@
-//
 //  Moneym8App.swift
 //  Moneym8
 //
 //  Created by chase Crummedyo on 10/11/24.
 //
-// Moneym8App.swift
 import SwiftUI
 import SwiftData
 import FirebaseCore
@@ -16,7 +14,7 @@ struct Moneym8App: App {
     @StateObject private var authManager = AuthManager.shared
     
     init() {
-        FirebaseApp.configure()
+        FirebaseConfig.configure()
     }
     
     var sharedModelContainer: ModelContainer = {
@@ -36,7 +34,7 @@ struct Moneym8App: App {
         WindowGroup {
             Group {
                 if authManager.isAuthenticated {
-                    ContentView(showAddTransaction: .constant(false))
+                    ContentView()
                         .environmentObject(themeManager)
                         .environmentObject(transactionViewModel)
                         .modelContainer(sharedModelContainer)
