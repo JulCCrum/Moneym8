@@ -115,19 +115,28 @@ class AuthManager: ObservableObject {
        
        for document in snapshot.documents {
            let data = document.data()
+           
+           // Format date
            let date = (data["date"] as? Timestamp)?.dateValue() ?? Date()
+           let dateStr = dateFormatter.string(from: date)
+           
+           // Get other fields
            let amount = data["amount"] as? Double ?? 0.0
            let isIncome = data["isIncome"] as? Bool ?? false
            let category = data["category"] as? String ?? ""
            let note = data["note"] as? String ?? ""
            
-           // Format the row, properly escaping fields
+           // Escape fields that might contain commas
+           let escapedCategory = category.contains(",") ? "\"\(category)\"" : category
+           let escapedNote = note.contains(",") ? "\"\(note)\"" : note
+           
+           // Format the row
            let row = [
-               dateFormatter.string(from: date),
+               dateStr,
                String(format: "%.2f", amount),
                isIncome ? "Income" : "Expense",
-               category,
-               note.replacingOccurrences(of: ",", with: ";")
+               escapedCategory,
+               escapedNote
            ].joined(separator: ",")
            
            csvString += row + "\n"

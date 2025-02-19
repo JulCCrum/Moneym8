@@ -18,10 +18,35 @@ struct ExpenseTransaction: Codable, Identifiable {
     var note: String?
 }
 
+enum RecurringFrequency: String, Codable {
+    case daily = "Daily"
+    case weekly = "Weekly"
+    case monthly = "Monthly"
+    case yearly = "Yearly"
+}
+
+struct RecurringTransaction: Codable, Identifiable {
+    @DocumentID var id: String?
+    var amount: Double
+    var isIncome: Bool
+    var startDate: Date
+    var category: String
+    var frequency: RecurringFrequency
+    var note: String?
+}
+
 class TransactionViewModel: ObservableObject {
     @Published var transactions: [ExpenseTransaction] = []
+    @Published var recurringTransactions: [RecurringTransaction] = []
     @Published var categoryBudgets: [String: Double] = [:]
     @Published var activeCategories: Set<String>
+    @Published var totalBudget: Double = UserDefaults.standard.double(forKey: "totalBudget")
+
+    // Add a method to update the budget
+    func updateTotalBudget(_ newValue: Double) {
+        totalBudget = newValue
+        UserDefaults.standard.set(newValue, forKey: "totalBudget")
+    }
     
     private var db = Firestore.firestore()
     private let initialCategories = ["Rent", "Food", "Transportation", "Other"]
@@ -42,6 +67,7 @@ class TransactionViewModel: ObservableObject {
         
         loadSavedBudgets()
         listenToTransactions()
+        listenToRecurringTransactions()
     }
     
     private func loadSavedBudgets() {
@@ -91,6 +117,23 @@ class TransactionViewModel: ObservableObject {
             }
     }
     
+    private func listenToRecurringTransactions() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        db.collection("users").document(userId)
+            .collection("recurring_transactions")
+            .addSnapshotListener { querySnapshot, error in
+                guard let documents = querySnapshot?.documents else {
+                    print("Error fetching recurring transactions: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                self.recurringTransactions = documents.compactMap { doc in
+                    try? doc.data(as: RecurringTransaction.self)
+                }
+            }
+    }
+    
     func addTransaction(_ transaction: ExpenseTransaction) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
@@ -103,6 +146,18 @@ class TransactionViewModel: ObservableObject {
         }
     }
     
+    func addRecurringTransaction(_ transaction: RecurringTransaction) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        do {
+            _ = try db.collection("users").document(userId)
+                .collection("recurring_transactions")
+                .addDocument(from: transaction)
+        } catch {
+            print("Error adding recurring transaction: \(error)")
+        }
+    }
+    
     func removeTransaction(_ transaction: ExpenseTransaction) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
@@ -112,6 +167,16 @@ class TransactionViewModel: ObservableObject {
                 .document(transactionId)
                 .delete()
         }
+    }
+    
+    func removeRecurringTransaction(_ transaction: RecurringTransaction) {
+        guard let userId = Auth.auth().currentUser?.uid,
+              let transactionId = transaction.id else { return }
+        
+        db.collection("users").document(userId)
+            .collection("recurring_transactions")
+            .document(transactionId)
+            .delete()
     }
     
     func getExpenses() -> [ExpenseTransaction] {

@@ -60,7 +60,7 @@ struct ProfileView: View {
             HelpView()
         }
         .fullScreenCover(isPresented: $showPreferences) {
-            PreferencesView()
+            PreferencesView(viewModel: viewModel)
         }
         .fullScreenCover(isPresented: $showSubscription) {
             SubscriptionView()

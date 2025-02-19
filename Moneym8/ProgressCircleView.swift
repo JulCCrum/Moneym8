@@ -2,9 +2,6 @@ import SwiftUI
 
 struct ProgressCircleView: View {
     @ObservedObject var viewModel: TransactionViewModel
-    let timeframe: String
-    
-    private let monthlyBudget: Double = 2000  // Example budget
     
     private var totalSpent: Double {
         let categories = ["Rent", "Food", "Transportation", "Other"]
@@ -14,7 +11,10 @@ struct ProgressCircleView: View {
     }
     
     private var percentage: Double {
-        min((totalSpent / monthlyBudget) * 100, 100)
+        if viewModel.totalBudget == 0 {
+            return 0
+        }
+        return min((totalSpent / viewModel.totalBudget) * 100, 100)
     }
     
     var body: some View {
@@ -43,16 +43,11 @@ struct ProgressCircleView: View {
                 Text("of budget")
                     .font(.caption)
                     .foregroundColor(.gray)
-                Text("$\(Int(totalSpent))/$\(Int(monthlyBudget))")
+                Text("$\(Int(totalSpent))/$\(Int(viewModel.totalBudget))")
                     .font(.caption)
                     .foregroundColor(.gray)
             }
         }
         .frame(width: 150, height: 150)
     }
-}
-
-#Preview {
-    let viewModel = TransactionViewModel()
-    return ProgressCircleView(viewModel: viewModel, timeframe: "1M")
 }

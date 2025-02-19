@@ -1,4 +1,3 @@
-//
 //  BarChartView.swift
 //  Moneym8
 //
@@ -13,11 +12,36 @@ struct BarChartView: View {
     
     private var categoryTotals: [(category: String, amount: Double)] {
         let categories = ["Rent", "Food", "Transportation", "Other"]
-        let totals = categories.map { category in
-            (category, viewModel.getCategoryTotal(category: category))
+        let calendar = Calendar.current
+        
+        // Filter transactions based on timeframe
+        let filteredTransactions: [ExpenseTransaction] = {
+            switch timeframe {
+            case "1D":
+                return viewModel.transactions.filter {
+                    calendar.isDate($0.date, inSameDayAs: Date())
+                }
+            case "1W":
+                guard let weekAgo = calendar.date(byAdding: .day, value: -7, to: Date()) else { return [] }
+                return viewModel.transactions.filter { $0.date >= weekAgo }
+            case "1M":
+                guard let monthAgo = calendar.date(byAdding: .month, value: -1, to: Date()) else { return [] }
+                return viewModel.transactions.filter { $0.date >= monthAgo }
+            case "1Y":
+                guard let yearAgo = calendar.date(byAdding: .year, value: -1, to: Date()) else { return [] }
+                return viewModel.transactions.filter { $0.date >= yearAgo }
+            default:
+                return []
+            }
+        }()
+        
+        // Calculate totals for each category using filtered transactions
+        return categories.map { category in
+            let total = filteredTransactions
+                .filter { $0.category == category && !$0.isIncome }
+                .reduce(0) { $0 + $1.amount }
+            return (category, total)
         }
-        print("Category Totals: \(totals)")
-        return totals
     }
     
     var body: some View {
@@ -33,20 +57,21 @@ struct BarChartView: View {
             }
             .chartXAxis {
                 AxisMarks { _ in
-                    AxisValueLabel()
-                        .foregroundStyle(.gray)
+                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0))
+                    AxisTick(stroke: StrokeStyle(lineWidth: 0))
                 }
             }
             .chartYAxis {
-                AxisMarks { _ in
+                AxisMarks { value in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
                         .foregroundStyle(.gray.opacity(0.2))
                     AxisTick(stroke: StrokeStyle(lineWidth: 0))
                     AxisValueLabel()
+                        .foregroundStyle(.gray)
                 }
             }
             
-            // Custom centered legend
+            // Legend at bottom
             HStack(spacing: 15) {
                 ForEach(categoryTotals, id: \.category) { item in
                     HStack(spacing: 5) {

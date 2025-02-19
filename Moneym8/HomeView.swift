@@ -10,7 +10,6 @@ enum ChartType: String, CaseIterable {
     case line = "Line Graph"
     case bar = "Bar Graph"
     case progress = "Progress Circle"
-    case sankey = "Sankey Diagram"
 }
 
 struct HomeView: View {
@@ -67,11 +66,7 @@ struct HomeView: View {
                         .frame(height: 200)
                         .padding()
                 case .progress:
-                    ProgressCircleView(viewModel: viewModel, timeframe: selectedTimePeriod)
-                        .frame(height: 200)
-                        .padding()
-                case .sankey:
-                    SankeyChartView(viewModel: viewModel, timeframe: selectedTimePeriod)
+                    ProgressCircleView(viewModel: viewModel)
                         .frame(height: 200)
                         .padding()
                 }
@@ -98,25 +93,6 @@ struct HomeView: View {
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
-
-            Text("Categories Summary")
-                .font(.headline)
-                .padding(.leading)
-                .padding(.top, 20)
-
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
-                ForEach(["Rent", "Food", "Transportation", "Other"], id: \.self) { category in
-                    let total = viewModel.getCategoryTotal(category: category)
-                    CategorySummaryBox(
-                        category: category,
-                        amount: total,
-                        color: colorScheme == .dark ?
-                            categoryColors[category]?.dark ?? .gray :
-                            categoryColors[category]?.light ?? .gray.opacity(0.1)
-                    )
-                }
-            }
-            .padding()
 
             Spacer()
         }

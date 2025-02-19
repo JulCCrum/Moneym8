@@ -10,6 +10,7 @@ struct PreferencesView: View {
     @Environment(\.presentationMode) var presentationMode
     @AppStorage("isDarkMode") private var isDarkMode = false
     @ObservedObject private var authManager = AuthManager.shared
+    @ObservedObject private var viewModel: TransactionViewModel
     
     @State private var showExportAlert = false
     @State private var showDeleteDataAlert = false
@@ -17,6 +18,10 @@ struct PreferencesView: View {
     @State private var showDeleteAccountConfirmation = false
     @State private var showError = false
     @State private var errorMessage = ""
+    
+    init(viewModel: TransactionViewModel) {
+            self.viewModel = viewModel
+        }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -51,6 +56,21 @@ struct PreferencesView: View {
                     .foregroundColor(.gray)
                     .font(.system(size: 14))) {
                     Text("USD ($)")
+                }
+                
+                Section(header: Text("BUDGET")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))) {
+                    HStack {
+                        Text("Monthly Budget")
+                        Spacer()
+                        TextField("Enter budget", value: $viewModel.totalBudget, formatter: NumberFormatter())
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                            .onChange(of: viewModel.totalBudget) { _, newValue in
+                                viewModel.updateTotalBudget(newValue)
+                            }
+                    }
                 }
                 
                 Section(header: Text("DATA")
@@ -140,34 +160,37 @@ struct PreferencesView: View {
             let tempDirectoryURL = FileManager.default.temporaryDirectory
             let fileURL = tempDirectoryURL.appendingPathComponent("moneym8_transactions.csv")
             
-            do {
-                // Write the CSV data to the temporary file
-                try csvData.write(to: fileURL)
+            // Write the CSV data to the file
+            try csvData.write(to: fileURL)
+            
+            // Present the share sheet on the main thread
+            await MainActor.run {
+                let activityVC = UIActivityViewController(
+                    activityItems: [fileURL],
+                    applicationActivities: nil
+                )
                 
-                await MainActor.run {
-                    // Create ActivityViewController to share the file
-                    let activityViewController = UIActivityViewController(
-                        activityItems: [fileURL],
-                        applicationActivities: nil
-                    )
-                    
-                    // Present the share sheet
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = windowScene.windows.first,
-                       let rootViewController = window.rootViewController {
-                        activityViewController.popoverPresentationController?.sourceView = window
-                        rootViewController.present(activityViewController, animated: true)
+                // Find the currently visible view controller
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let rootVC = windowScene.windows.first?.rootViewController {
+                    var currentVC = rootVC
+                    while let presentedVC = currentVC.presentedViewController {
+                        currentVC = presentedVC
                     }
-                }
-            } catch {
-                await MainActor.run {
-                    errorMessage = "Error saving file: \(error.localizedDescription)"
-                    showError = true
+                    
+                    // For iPad
+                    if UIDevice.current.userInterfaceIdiom == .pad {
+                        activityVC.popoverPresentationController?.sourceView = currentVC.view
+                        activityVC.popoverPresentationController?.sourceRect = CGRect(x: currentVC.view.bounds.midX, y: currentVC.view.bounds.midY, width: 0, height: 0)
+                    }
+                    
+                    currentVC.present(activityVC, animated: true)
                 }
             }
-        } catch {
+        }
+        catch {
             await MainActor.run {
-                errorMessage = error.localizedDescription
+                errorMessage = "Failed to export data: \(error.localizedDescription)"
                 showError = true
             }
         }
@@ -197,5 +220,5 @@ struct PreferencesView: View {
 }
 
 #Preview {
-    PreferencesView()
+    PreferencesView(viewModel: TransactionViewModel())
 }

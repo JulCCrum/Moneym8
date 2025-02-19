@@ -13,6 +13,8 @@ struct AddIncomeView: View {
     @State private var date: Date = Date()
     @State private var note: String = ""
     @State private var isIncome: Bool = true
+    @State private var isRecurring: Bool = false
+    @State private var recurringFrequency: RecurringFrequency = .monthly
     @FocusState private var amountIsFocused: Bool
     @FocusState private var noteIsFocused: Bool
     
@@ -114,6 +116,23 @@ struct AddIncomeView: View {
                 .cornerRadius(10)
             }
             
+            // Recurring Option
+            VStack(alignment: .leading, spacing: 8) {
+                Toggle("RECURRING", isOn: $isRecurring)
+                    .foregroundColor(.gray)
+                    .font(.system(size: 14))
+                
+                if isRecurring {
+                    Picker("Frequency", selection: $recurringFrequency) {
+                        Text("Daily").tag(RecurringFrequency.daily)
+                        Text("Weekly").tag(RecurringFrequency.weekly)
+                        Text("Monthly").tag(RecurringFrequency.monthly)
+                        Text("Yearly").tag(RecurringFrequency.yearly)
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+            
             VStack(alignment: .leading, spacing: 8) {
                 Text("NOTE (OPTIONAL)")
                     .foregroundColor(.gray)
@@ -173,15 +192,27 @@ struct AddIncomeView: View {
     private func saveIncome() {
         guard let amountValue = Double(amount), amountValue > 0 else { return }
         
-        let transaction = ExpenseTransaction(
-            amount: amountValue,
-            isIncome: isIncome,
-            date: date,
-            category: selectedCategory,
-            note: note.isEmpty ? nil : note
-        )
+        if isRecurring {
+            let recurringTransaction = RecurringTransaction(
+                amount: amountValue,
+                isIncome: isIncome,
+                startDate: date,
+                category: selectedCategory,
+                frequency: recurringFrequency,
+                note: note.isEmpty ? nil : note
+            )
+            viewModel.addRecurringTransaction(recurringTransaction)
+        } else {
+            let transaction = ExpenseTransaction(
+                amount: amountValue,
+                isIncome: isIncome,
+                date: date,
+                category: selectedCategory,
+                note: note.isEmpty ? nil : note
+            )
+            viewModel.addTransaction(transaction)
+        }
         
-        viewModel.addTransaction(transaction)
         dismiss()
     }
 }
