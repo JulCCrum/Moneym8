@@ -1,13 +1,15 @@
+// ProfileView.swift
+// Moneym8
 //
-//  ProfileView.swift
-//  Moneym8
-//
+// Created by chase Crummedyo on [Date]
 
 import SwiftUI
+import SwiftData
 
 struct ProfileView: View {
-    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject private var authManager: AuthManager
     @ObservedObject var viewModel: TransactionViewModel
+    @Environment(\.colorScheme) var colorScheme
     @State private var showInsights = false
     @State private var showHelp = false
     @State private var showPreferences = false
@@ -24,32 +26,76 @@ struct ProfileView: View {
                 .padding(.bottom, 20)
             
             List {
-                ForEach([
-                    ("Insights", "chart.bar.fill", Color.blue, $showInsights),
-                    ("Help", "questionmark", Color.orange, $showHelp),
-                    ("Preferences", "gearshape.fill", Color.green, $showPreferences),
-                    ("Subscription", "creditcard.fill", Color.purple, $showSubscription),
-                    ("About", "info", Color.gray, $showAbout)
-                ], id: \.0) { item in
-                    Button(action: { item.3.wrappedValue = true }) {
-                        HStack {
-                            ZStack {
-                                Circle()
-                                    .fill(item.2.opacity(0.2))
-                                    .frame(width: 36, height: 36)
-                                Image(systemName: item.1)
-                                    .foregroundColor(item.2)
-                            }
-                            Text(item.0)
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
+                // Profile menu items
+                ProfileMenuItem(
+                    title: "Insights",
+                    icon: "chart.bar.fill",
+                    color: .blue,
+                    action: { showInsights = true }
+                )
+                
+                ProfileMenuItem(
+                    title: "Help",
+                    icon: "questionmark",
+                    color: .orange,
+                    action: { showHelp = true }
+                )
+                
+                ProfileMenuItem(
+                    title: "Preferences",
+                    icon: "gearshape.fill",
+                    color: .green,
+                    action: { showPreferences = true }
+                )
+                
+                ProfileMenuItem(
+                    title: "Subscription",
+                    icon: "creditcard.fill",
+                    color: .purple,
+                    action: { showSubscription = true }
+                )
+                
+                ProfileMenuItem(
+                    title: "About",
+                    icon: "info",
+                    color: .gray,
+                    action: { showAbout = true }
+                )
+                
+                // Sync option
+                // In ProfileView.swift
+                // In ProfileView.swift, modify the Sync button to show authentication status
+                Button(action: {
+                    authManager.showAuthentication = true
+                }) {
+                    HStack {
+                        ZStack {
+                            Circle()
+                                .fill(Color.blue.opacity(0.2))
+                                .frame(width: 36, height: 36)
+                            Image(systemName: "icloud.fill")
+                                .foregroundColor(.blue)
                         }
+                        VStack(alignment: .leading) {
+                            Text("Sync with Account")
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                            if authManager.isAuthenticated {
+                                Text("Signed in")
+                                    .font(.caption)
+                                    .foregroundColor(.green)
+                            } else {
+                                Text("Not signed in")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
                     }
-                    .listRowBackground(Color.clear)
-                    .padding(.vertical, 8)
                 }
+                .listRowBackground(Color.clear)
+                .padding(.vertical, 8)
             }
             .listStyle(PlainListStyle())
         }
@@ -71,6 +117,37 @@ struct ProfileView: View {
     }
 }
 
+// Helper view for menu items
+struct ProfileMenuItem: View {
+    let title: String
+    let icon: String
+    let color: Color
+    let action: () -> Void
+    @Environment(\.colorScheme) var colorScheme
+    
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                ZStack {
+                    Circle()
+                        .fill(color.opacity(0.2))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: icon)
+                        .foregroundColor(color)
+                }
+                Text(title)
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.gray)
+            }
+        }
+        .listRowBackground(Color.clear)
+        .padding(.vertical, 8)
+    }
+}
+
 #Preview {
     ProfileView(viewModel: TransactionViewModel())
+        .environmentObject(AuthManager.shared)
 }

@@ -1,14 +1,13 @@
+// AuthenticationView.swift
+// Moneym8
 //
-//  AuthenticationView.swift
-//  Moneym8
-//
-//  Created by chase Crummedyo on 11/23/24.
+// Created by chase Crummedyo on 11/23/24.
 //
 
 import SwiftUI
 
 struct AuthenticationView: View {
-    @ObservedObject private var authManager = AuthManager.shared
+    @EnvironmentObject private var authManager: AuthManager
     @State private var email = ""
     @State private var password = ""
     @State private var isSignUp = false
@@ -19,7 +18,7 @@ struct AuthenticationView: View {
             // App Logo
             Image(systemName: "dollarsign.circle.fill")
                 .font(.system(size: 80))
-                .foregroundColor(.appGreen)
+                .foregroundColor(Color.appGreen) // Use appGreen from Colors.swift
             
             Text("Moneym8")
                 .font(.largeTitle)
@@ -43,6 +42,7 @@ struct AuthenticationView: View {
                         } else {
                             try await authManager.signInWithEmail(email: email, password: password)
                         }
+                        authManager.showAuthentication = false // Dismiss after successful auth
                     } catch {
                         showError = true
                     }
@@ -60,7 +60,7 @@ struct AuthenticationView: View {
             // Toggle between Sign In and Sign Up
             Button(action: { isSignUp.toggle() }) {
                 Text(isSignUp ? "Already have an account? Sign In" : "Don't have an account? Create one")
-                    .foregroundColor(.appGreen)
+                    .foregroundColor(Color.appGreen)
             }
             .buttonStyle(PlainButtonStyle())
         }
@@ -75,4 +75,5 @@ struct AuthenticationView: View {
 
 #Preview {
     AuthenticationView()
+        .environmentObject(AuthManager.shared) // Provide AuthManager for preview
 }

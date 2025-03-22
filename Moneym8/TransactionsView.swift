@@ -105,22 +105,18 @@ struct TransactionsView: View {
             
             // Transactions List
             List {
-                ForEach(sortedTransactions) { expenseTransaction in
+                ForEach(sortedTransactions) { transaction in
                     TransactionRow(
-                        expenseTransaction: expenseTransaction,
+                        expenseTransaction: transaction,
                         viewModel: viewModel
                     )
                     .listRowBackground(Color.clear)
                 }
                 .onDelete { indexSet in
                     let toDelete = indexSet.map { sortedTransactions[$0] }
-                    for expenseTransaction in toDelete {
+                    for transaction in toDelete {
                         // remove from the main array
-                        if let idx = viewModel.transactions.firstIndex(where: {
-                            $0.id == expenseTransaction.id
-                        }) {
-                            viewModel.transactions.remove(at: idx)
-                        }
+                        viewModel.removeTransaction(transaction)
                     }
                 }
             }
@@ -143,94 +139,10 @@ struct TransactionsView: View {
     }
 }
 
-struct TransactionRow: View {
-    let expenseTransaction: ExpenseTransaction
-    @ObservedObject var viewModel: TransactionViewModel
-    @State private var showingDetail = false
-    @Environment(\.colorScheme) var colorScheme
-    
-    var body: some View {
-        Button(action: { showingDetail = true }) {
-            HStack {
-                ZStack {
-                    Circle()
-                        .fill(expenseTransaction.category.color.opacity(
-                            colorScheme == .dark ? 1 : 0.1
-                        ))
-                        .frame(width: 40, height: 40)
-                    
-                    Text(expenseTransaction.category.emoji)
-                }
-                
-                VStack(alignment: .leading) {
-                    Text(expenseTransaction.category)
-                        .font(.headline)
-                        .foregroundColor(colorScheme == .dark ? .white : .black)
-                    Text(formatDate(expenseTransaction.date))
-                        .font(.caption)
-                        .foregroundColor(Color(hex: "808080"))
-                }
-                
-                Spacer()
-                
-                Text(expenseTransaction.formattedAmount)
-                    .font(.headline)
-                    .foregroundColor(expenseTransaction.isIncome ? .green : .red)
-            }
-            .padding(.vertical, 4)
-        }
-        .buttonStyle(PlainButtonStyle())
-        .fullScreenCover(isPresented: $showingDetail) {
-            TransactionDetailView(
-                viewModel: viewModel,
-                expenseTransaction: expenseTransaction
-            )
-        }
-    }
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
-    }
-}
-
-// A helper extension to format the amount with currency style
-extension ExpenseTransaction {
-    var formattedAmount: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        return formatter.string(from: NSNumber(value: amount)) ?? "$0.00"
-    }
-}
-
-// A helper to convert hex string to Color
-extension Color {
-    init(hex: String) {
-        let scanner = Scanner(string: hex)
-        var rgbValue: UInt64 = 0
-        scanner.scanHexInt64(&rgbValue)
-        
-        let r = (rgbValue & 0xFF0000) >> 16
-        let g = (rgbValue & 0x00FF00) >> 8
-        let b = (rgbValue & 0x0000FF)
-        
-        self = Color(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue: Double(b) / 255,
-            opacity: 1
-        )
-    }
-}
-
-struct TransactionsView_Previews: PreviewProvider {
-    static var previews: some View {
-        TransactionsView(
-            isExpanded: .constant(false),
-            isBlurred: .constant(false),
-            viewModel: TransactionViewModel()
-        )
-    }
+#Preview {
+    TransactionsView(
+        isExpanded: .constant(false),
+        isBlurred: .constant(false),
+        viewModel: TransactionViewModel()
+    )
 }

@@ -10,8 +10,9 @@ struct FloatingActionButtons: View {
     let isBlurred: Bool
     let handleButtonTap: (Int) -> Void
     let toggleExpanded: () -> Void
-    private let buttons = ["minus", "plus", "questionmark"]
+    private let buttons = ["sparkles", "plus", "questionmark"] // Changed "minus" to "sparkles" for AI/Plaid preview
     @Environment(\.colorScheme) var colorScheme
+    @State private var showNewFeatureAlert = false // Add state for showing feature preview alert
     
     var body: some View {
         GeometryReader { geometry in
@@ -22,11 +23,15 @@ struct FloatingActionButtons: View {
                     ZStack {
                         ForEach(buttons.indices, id: \.self) { index in
                             Button {
-                                handleButtonTap(index)
+                                if index == 0 { // Special handling for the first button (previously minus)
+                                    showNewFeatureAlert = true // Show preview alert instead
+                                } else {
+                                    handleButtonTap(index)
+                                }
                             } label: {
                                 Image(systemName: buttons[index])
                                     .frame(width: 44, height: 44)
-                                    .background(colorScheme == .dark ? Color(hex: "404040") : .black)
+                                    .background(index == 0 ? Color.purple : (colorScheme == .dark ? Color(hex: "404040") : .black))
                                     .foregroundColor(.white)
                                     .clipShape(Circle())
                             }
@@ -52,6 +57,11 @@ struct FloatingActionButtons: View {
                     .offset(x: -geometry.size.width / 10, y: -15)
                     .padding(.bottom, 60)
                 }
+            }
+            .alert("Coming Soon!", isPresented: $showNewFeatureAlert) {
+                Button("Cool!", role: .cancel) { }
+            } message: {
+                Text("We're excited to announce two new features coming to Moneym8:\n\n• AI-powered financial insights\n• Plaid integration for automatic transaction import")
             }
         }
     }

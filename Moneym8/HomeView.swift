@@ -1,8 +1,3 @@
-//
-//  HomeView.swift
-//  Moneym8
-//
-
 import SwiftUI
 import Charts
 
@@ -18,7 +13,12 @@ struct HomeView: View {
     @State private var selectedTimePeriod: String = "1M"
     @Environment(\.colorScheme) var colorScheme
 
-    private let categoryColors = [
+    // Break down the dictionary into individual variables first
+    private let rentColors = (light: Color.blue.opacity(0.9), dark: Color(hex: "0039CB"))
+    private let foodColors = (light: Color.green.opacity(0.9), dark: Color(hex: "2E7D32"))
+    // etc.
+    
+    private let categoryColors: [String: (light: Color, dark: Color)] = [
         "Rent": (light: Color.blue.opacity(0.9), dark: Color(hex: "0039CB")),
         "Food": (light: Color.green.opacity(0.9), dark: Color(hex: "2E7D32")),
         "Transportation": (light: Color.orange.opacity(0.9), dark: Color(hex: "F57C00")),
@@ -96,33 +96,5 @@ struct HomeView: View {
 
             Spacer()
         }
-    }
-}
-
-struct CategorySummaryBox: View {
-    let category: String
-    let amount: Double
-    let color: Color
-
-    var body: some View {
-        VStack {
-            Text(category)
-                .font(.subheadline)
-                .foregroundColor(.white)
-            Text("$\(Int(amount))")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(color)
-        .cornerRadius(10)
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView(viewModel: TransactionViewModel())
     }
 }

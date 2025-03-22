@@ -1,10 +1,10 @@
+// InsightsView.swift
+// Moneym8
 //
-//  InsightsView.swift
-//  Moneym8
-//
-//  Created by chase Crummedyo on 11/8/24.
+// Created by chase Crummedyo on 11/8/24.
 
 import SwiftUI
+import SwiftData // Add this import for ModelContainer
 
 struct InsightsView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -173,5 +173,9 @@ private func getCategoryColor(_ category: String) -> Color {
 }
 
 #Preview {
-    InsightsView(viewModel: TransactionViewModel())
+    InsightsView(viewModel: TransactionViewModel(modelContext: try! ModelContainer(for: Schema([
+        ExpenseTransaction.self,
+        RecurringTransaction.self,
+        Item.self
+    ])).mainContext))
 }

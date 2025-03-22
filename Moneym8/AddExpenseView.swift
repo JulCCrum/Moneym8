@@ -1,33 +1,24 @@
+// AddExpenseView.swift
+// Moneym8
 //
-//  AddExpenseView.swift
-//  Moneym8
-//
-//  Created by chase Crummedyo on some date
-//
+// Created by chase Crummedyo on [Date]
 
 import SwiftUI
-import FirebaseFirestore
+import SwiftData
 
 struct AddExpenseView: View {
-    @Environment(\.dismiss) var dismiss
-    
-    /// Your observable ViewModel; must be a class conforming to ObservableObject.
     @ObservedObject var viewModel: TransactionViewModel
-    
+    @Environment(\.dismiss) var dismiss
     @State private var amount: String = ""
-    @State private var selectedCategory: String = "Food"
-    @State private var date: Date = Date()
+    @State private var category: String = "Other"
     @State private var note: String = ""
-    @FocusState private var amountIsFocused: Bool
-    @FocusState private var noteIsFocused: Bool
-    
-    /// Example categories for the picker/menu
-    let categories = ["Rent", "Food", "Transportation", "Other"]
+    @State private var date: Date = Date()
+    @State private var showError = false
+    @State private var errorMessage = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            
-            // Header
+            // Header with title and close button
             HStack {
                 Text("Add Expense")
                     .font(.largeTitle)
@@ -47,40 +38,55 @@ struct AddExpenseView: View {
             }
             .padding(.top)
             
-            // AMOUNT
+            // Amount field
             VStack(alignment: .leading, spacing: 8) {
                 Text("AMOUNT")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
-                
                 HStack {
                     Text("$")
                         .foregroundColor(.gray)
                     TextField("0", text: $amount)
                         .keyboardType(.decimalPad)
                         .foregroundColor(.primary)
-                        .focused($amountIsFocused)
                 }
                 .font(.system(size: 24))
             }
             
-            // CATEGORY
+            // Display work cost calculation if feature is enabled
+            if viewModel.showWageCost {
+                if let amountValue = Double(amount), amountValue > 0 {
+                    HStack {
+                        Image(systemName: "clock")
+                        Text("\(viewModel.getWorkHoursCostFormatted(for: amountValue, at: date)) of work")
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.top, 4)
+                }
+            }
+            
+            // Category picker
             VStack(alignment: .leading, spacing: 8) {
                 Text("CATEGORY")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
-                
                 Menu {
-                    ForEach(categories, id: \.self) { category in
-                        Button(action: {
-                            selectedCategory = category
-                        }) {
-                            Text(category)
+                    ForEach(viewModel.categories, id: \.self) { category in
+                        Button(action: { self.category = category }) {
+                            HStack {
+                                Circle()
+                                    .fill(getCategoryColor(category))
+                                    .frame(width: 8, height: 8)
+                                Text(category)
+                            }
                         }
                     }
                 } label: {
                     HStack {
-                        Text(selectedCategory)
+                        Circle()
+                            .fill(getCategoryColor(category))
+                            .frame(width: 8, height: 8)
+                        Text(category)
                         Spacer()
                         Image(systemName: "chevron.down")
                             .foregroundColor(.gray)
@@ -92,45 +98,34 @@ struct AddExpenseView: View {
                 .buttonStyle(PlainButtonStyle())
             }
             
-            // DATE
+            // Date picker
             VStack(alignment: .leading, spacing: 8) {
                 Text("DATE")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
-                
-                HStack {
-                    // DatePicker for the date
-                    DatePicker("", selection: $date, displayedComponents: [.date])
-                        .labelsHidden()
-                    
-                    // DatePicker for the time
-                    DatePicker("", selection: $date, displayedComponents: [.hourAndMinute])
-                        .labelsHidden()
-                }
-                .padding(8)
-                .background(Color(.tertiarySystemBackground))
-                .cornerRadius(10)
+                DatePicker("", selection: $date, displayedComponents: [.date, .hourAndMinute])
+                    .labelsHidden()
+                    .padding()
+                    .background(Color(.tertiarySystemBackground))
+                    .cornerRadius(10)
             }
             
-            // NOTE
+            // Note field
             VStack(alignment: .leading, spacing: 8) {
                 Text("NOTE (OPTIONAL)")
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
-                
                 TextField("Add a note", text: $note)
-                    .focused($noteIsFocused)
                     .padding()
                     .background(Color(.tertiarySystemBackground))
                     .cornerRadius(10)
                     .foregroundColor(.primary)
             }
             
-            Spacer(minLength: 20)
+            Spacer()
             
-            // Buttons
+            // Save & Cancel buttons
             VStack(spacing: 12) {
-                // Save button
                 Button(action: { saveExpense() }) {
                     HStack {
                         Image(systemName: "checkmark")
@@ -145,7 +140,6 @@ struct AddExpenseView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 
-                // Cancel button
                 Button(action: { dismiss() }) {
                     HStack {
                         Image(systemName: "xmark")
@@ -162,44 +156,42 @@ struct AddExpenseView: View {
             }
         }
         .padding()
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Spacer()
-                Button("Done") {
-                    amountIsFocused = false
-                    noteIsFocused = false
-                }
-            }
+        .alert("Error", isPresented: $showError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorMessage)
         }
     }
     
-    /// Called when user taps "Save Transaction"
     private func saveExpense() {
-        // Ensure a valid numeric amount
-        guard let amountValue = Double(amount), amountValue > 0 else { return }
+        guard let amountValue = Double(amount), amountValue > 0 else {
+            errorMessage = "Please enter a valid amount."
+            showError = true
+            return
+        }
         
-        // Create your ExpenseTransaction instance
-        let expenseTransaction = ExpenseTransaction(
+        let transaction = ExpenseTransaction(
             amount: amountValue,
             isIncome: false,
             date: date,
-            category: selectedCategory,
+            category: category,
             note: note.isEmpty ? nil : note
         )
-        
-        // Call the ViewModel to add the transaction to Firestore
-        viewModel.addTransaction(expenseTransaction)
-        
-        // Dismiss the sheet
+        viewModel.addTransaction(transaction)
         dismiss()
+    }
+    
+    private func getCategoryColor(_ category: String) -> Color {
+        switch category {
+        case "Rent": return .blue
+        case "Food": return .green
+        case "Transportation": return .orange
+        case "Other": return .purple
+        default: return .gray
+        }
     }
 }
 
-// MARK: - Preview
-
-struct AddExpenseView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Provide a mock or real TransactionViewModel here
-        AddExpenseView(viewModel: TransactionViewModel())
-    }
+#Preview {
+    AddExpenseView(viewModel: TransactionViewModel())
 }

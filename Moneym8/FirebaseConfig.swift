@@ -1,17 +1,35 @@
-//  FirebaseConfig.swift
-//  Moneym8
+// FirebaseConfig.swift
 
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseAuth
 
 class FirebaseConfig {
+    static var isConfigured = false
+    
     static func configure() {
-        // Simple Firebase configuration without DeviceCheck options
+        // Prevent multiple initialization
+        guard !isConfigured else { return }
+        
+        // Configure Firebase
         FirebaseApp.configure()
         
-        // Configure Firestore settings
-        let db = Firestore.firestore()
-        let settings = db.settings
-        db.settings = settings
+        // Set isConfigured flag
+        isConfigured = true
+        
+        print("Firebase has been configured successfully")
+    }
+    
+    // Helper method to get Firestore instance
+    static func getFirestore() -> Firestore {
+        if !isConfigured {
+            configure()
+        }
+        return Firestore.firestore()
+    }
+    
+    // Helper method to get current user
+    static func getCurrentUser() -> User? {
+        return Auth.auth().currentUser
     }
 }

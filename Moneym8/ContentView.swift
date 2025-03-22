@@ -1,15 +1,16 @@
+// ContentView.swift
+// Moneym8
 //
-//  ContentView.swift
-//  Moneym8
-//
-//  Created by chase Crummedyo on 10/11/24.
+// Created by chase Crummedyo on 10/11/24.
 //
 
 import SwiftUI
 import FirebaseFirestore
+import SwiftData
 
 struct ContentView: View {
-    @StateObject private var transactionViewModel = TransactionViewModel()
+    @EnvironmentObject private var transactionViewModel: TransactionViewModel
+    @EnvironmentObject private var authManager: AuthManager
     @State private var selectedTab = 0
     @State private var isExpanded = false
     @State private var isBlurred = false
@@ -30,16 +31,14 @@ struct ContentView: View {
                     }
                     .tag(0)
                 
-                TransactionsView(isExpanded: $isExpanded,
-                                 isBlurred: $isBlurred,
-                                 viewModel: transactionViewModel)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "dollarsign.circle.fill")
-                        Text("Transactions")
+                TransactionsView(isExpanded: $isExpanded, isBlurred: $isBlurred, viewModel: transactionViewModel)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "dollarsign.circle.fill")
+                            Text("Transactions")
+                        }
                     }
-                }
-                .tag(1)
+                    .tag(1)
                 
                 ProfileView(viewModel: transactionViewModel)
                     .tabItem {
@@ -70,7 +69,6 @@ struct ContentView: View {
                 }
             }
         }
-        // Present sheets outside of TabView for proper presentation
         .sheet(isPresented: $showAddExpense) {
             NavigationView {
                 AddExpenseView(viewModel: transactionViewModel)
@@ -86,16 +84,26 @@ struct ContentView: View {
                 HelpView()
             }
         }
+        .sheet(isPresented: $authManager.showAuthentication) {
+            NavigationView {
+                AuthenticationView()
+            }
+        }
+        .sheet(isPresented: $transactionViewModel.showAccountCreationReminder) {
+            AccountCreationReminderView(isPresented: $transactionViewModel.showAccountCreationReminder)
+                .environmentObject(authManager)
+        }
     }
     
-    private func handleButtonTap(_ index: Int) {
+    func handleButtonTap(_ index: Int) {
         withAnimation {
             isExpanded = false
             isBlurred = false
         }
         switch index {
         case 0:
-            showAddExpense = true
+            // First button (sparkles) is now handled directly in FloatingActionButtons
+            break
         case 1:
             showAddIncome = true
         case 2:
@@ -106,7 +114,12 @@ struct ContentView: View {
     }
 }
 
-// Updated Preview (no Binding needed)
 #Preview {
     ContentView()
+        .environmentObject(TransactionViewModel(modelContext: try! ModelContainer(for: Schema([
+            ExpenseTransaction.self,
+            RecurringTransaction.self,
+            Item.self
+        ])).mainContext))
+        .environmentObject(AuthManager.shared)
 }

@@ -62,6 +62,18 @@ struct TransactionDetailView: View {
                     .foregroundColor(isIncome ? .green : .red)
                     .multilineTextAlignment(.center)
                     .focused($amountIsFocused)
+                
+                // Add work hours cost display
+                if viewModel.showWageCost && !isIncome {
+                    if let amountValue = Double(amount), amountValue > 0 {
+                        HStack {
+                            Image(systemName: "clock")
+                            Text("\(viewModel.getWorkHoursCostFormatted(for: amountValue, at: date)) of work")
+                        }
+                        .foregroundColor(.gray)
+                        .font(.headline)
+                    }
+                }
             }
             .padding(.vertical, 24)
             
@@ -181,7 +193,7 @@ struct TransactionDetailView: View {
         
         // Create a new updated ExpenseTransaction
         let updated = ExpenseTransaction(
-            id: expenseTransaction.id ?? UUID().uuidString,
+            id: expenseTransaction.id,
             amount: amountValue,
             isIncome: isIncome,
             date: date,
